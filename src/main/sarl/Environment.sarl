@@ -1,0 +1,21 @@
+import io.sarl.core.Logging
+import io.sarl.core.Initialize
+
+/**
+ * 
+ */
+
+/**
+ * @author Olivier
+ *
+ */
+agent Environment {
+	
+	uses Logging
+	
+	on Initialize{
+		println("\nTest")
+	}
+	
+	
+}
