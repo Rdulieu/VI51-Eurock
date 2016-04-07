@@ -1,5 +1,6 @@
 package tx52.environment;
 
-public class StaticObject {
+public class StaticObject extends EnvironmentObject {
+	
 
 }

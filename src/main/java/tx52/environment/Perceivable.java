@@ -1,5 +1,5 @@
 package tx52.environment;
 
-public class Perceivable {
-
+public final class Perceivable {
+	EnvironmentObject obj;
 }
