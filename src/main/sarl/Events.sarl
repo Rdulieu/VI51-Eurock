@@ -1,0 +1,38 @@
+/**
+ * 
+ */
+
+/**
+ * @author Olivier
+ *
+ */
+event Perception {
+	val time : int
+	val objects : List<EnvironmentObject>
+	val position : pos
+	val bodyId : ID
+	new (time : int, bodyID : ID, objects : List<EnvironmentObject>, position : pos){
+		this.time = time
+		this.bodyId = bodyID
+		this.objects = objects
+		this.position = position
+	}
+	
+}
+
+//Action of an agent
+event Action{
+	val time : int
+	val direction : Direction
+	
+	new (time : int, direction : Direction) {
+		this.time = time
+		this.direction = direction
+	}
+}
+
+event RunEndOfStep
+
+event RunBeginingOfStep
+
+event EndOfGame
