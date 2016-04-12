@@ -1,6 +1,7 @@
-import java.util.ArrayList
 import tx52.environment.EnvironmentObject
-import java.util.UUID
+import tx52.environment.Position
+import java.util.List
+import tx52.environment.UID
 
 /**
  * 
@@ -11,29 +12,23 @@ import java.util.UUID
  *
  */
 event Perception {
-	val time : float
-	val objects : ArrayList<EnvironmentObject>
-	val position : position
-	val bodyId : UUID
-	new (time : float, bodyID : UUID, objects : ArrayList<EnvironmentObject>, position : position){
+	val time : int
+	val objects : List<EnvironmentObject>
+	val pos : Position
+	val bodyId : UID
+	new (time : int, bodyID : UID, objects : List<EnvironmentObject>, pos : Position){
 		this.time = time
 		this.bodyId = bodyID
 		this.objects = objects
-		this.position = position
+		this.pos = pos
 	}
 	
 }
 
-//Action of an agent
-event Action{
-	val time : int
-	val direction : Direction
-	
-	new (time : int, direction : Direction) {
-		this.time = time
-		this.direction = direction
-	}
-}
+//Action of an agent -> not needed
+event BodyPerception
+
+event AgentInfluence
 
 event RunEndOfStep
 

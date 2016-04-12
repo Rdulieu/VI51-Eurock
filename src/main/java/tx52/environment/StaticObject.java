@@ -2,10 +2,8 @@ package tx52.environment;
 
 public class StaticObject extends EnvironmentObject {
 
-	public StaticObject(float x, float y) {
-		super(x, y);
-		// TODO Auto-generated constructor stub
+	public StaticObject(float x, float y){
+		super(x,y);
 	}
-	
 
 }
