@@ -1,3 +1,7 @@
+# SARL ignore
+*._trace
+*.sarlbin
+
 *.class
 
 # Mobile Tools for Java (J2ME)
