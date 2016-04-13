@@ -1,6 +1,8 @@
 # SARL ignore
 *._trace
 *.sarlbin
+src/main/generated-sources/
+
 
 *.class
 

@@ -3,29 +3,28 @@ import io.sarl.core.Initialize
 import java.util.TreeMap
 import tx52.environment.Environment
 import tx52.environment.EnvironmentListener
-
-/**
- * 
- */
+import tx52.environment.EnvironmentObject
 
 /**
  * @author Olivier
  *
  */
-agent EnvironmentAgent {
+agent EnvironmentAgent { //TODO récupérer le code d'IA54 et l'adapter
 	
 	uses Logging
-	var Environment = new Environment
+	var environment : Environment
 	var listeners = <EnvironmentListener>newArrayList
-	var time =0
-	val actions = <environmentChangeQuery>newLinkedList
+	var time = 0
+//	val actions = <environmentChangeQuery>newLinkedList
 	
 	on Initialize{
 		println("\nTest")
-		fireEnvironmentChange
+		var objects = <EnvironmentObject>newArrayList(new EnvironmentObject(0,0))
+		environment = new Environment(objects)
+		//fireEnvironmentChange
 	}
 	
-	def fireEnvironmentChange {
+/*	def fireEnvironmentChange {
 		var objects = new TreeMap<Point,EnvironmentObject>
 		for (obj : getEnvironmentObjects) {
 				objects.put(obj.position,obj)
@@ -34,16 +33,22 @@ agent EnvironmentAgent {
 		for (listener : this.listeners) {
 			listener.EnvironmentChanged(^event)
 		}
-	}
+	}*/
 	
+	def getEnvironmentObjects() {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+
 	//initialize the turn (update world state, give perceptions to AI, fire all the agents, *increase time) *or in endOfStep 
 	on RunBeginingOfStep {
+		//TODO write RunBeginingOfStep
 		synchronized(this){
 			
 		}
 	}
 	// update world state, update the position of all objects, move to next step
 	on RunEndOfStep {
+		//TODO write RunBeginingOfStep
 		synchronized(this) {
 			
 		}

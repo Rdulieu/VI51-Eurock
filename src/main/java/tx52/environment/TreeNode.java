@@ -12,10 +12,11 @@ public class TreeNode {
 
 	TreeNode(MinimumBoundingRectangle box) {
 		this.setBox(box);
+		objects = new ArrayList<EnvironmentObject>();
 	}
 
 	public void add(EnvironmentObject o) {
-		if(objects.size()<15 && getChildren()==null){  //TODO define 15 as a parameter
+		if(objects.size()<15 && getChildren()== null){  //TODO define 15 as a parameter
 			objects.add(o);
 		}else{
 			if(getChildren()==null){
@@ -31,11 +32,16 @@ public class TreeNode {
 			for(EnvironmentObject e : P){
 				addInChild(e);
 			}
+			addInChild(o);
 		}
-		addInChild(o);
+		
 		
 	}
-
+	
+	/**
+	 * should be use only if a child was created
+	 * @param e
+	 */
 	private void addInChild(EnvironmentObject e) {
 		int index=0;
 		int n=0;

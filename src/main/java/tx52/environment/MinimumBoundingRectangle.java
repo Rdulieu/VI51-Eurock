@@ -4,7 +4,7 @@ public class MinimumBoundingRectangle {
 
 	public boolean intersects(MinimumBoundingRectangle box) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

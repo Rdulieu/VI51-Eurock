@@ -4,10 +4,13 @@ public class EnvironmentObject {
 	
 	private Position position;
 	private MinimumBoundingRectangle box;
+	private enum ObjectType {
+		StaticObject, DynamicObject;
+	}
 	
-	EnvironmentObject(float x, float y) {
-		pos = new Position(x, y);
-
+	public EnvironmentObject(float x, float y) {
+		position = new Position(x, y);
+		box = new MinimumBoundingRectangle();
 	}
 	
 	public MinimumBoundingRectangle getBox() {
@@ -21,10 +24,6 @@ public class EnvironmentObject {
 	}
 	public void setPosition(Position position) {
 		this.position = position;
-	}
-	
-	private enum ObjectType {
-		StaticObject, DynamicObject;
 	}
 	
 }

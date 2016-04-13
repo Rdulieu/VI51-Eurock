@@ -1,6 +1,6 @@
 package tx52.environment;
 
-class Position {
+public class Position {
 
 		private float x;
 		private float y;

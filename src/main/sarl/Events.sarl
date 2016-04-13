@@ -1,7 +1,7 @@
 import tx52.environment.EnvironmentObject
 import tx52.environment.Position
 import java.util.List
-import tx52.environment.UID
+import java.util.UUID
 
 /**
  * 
@@ -15,8 +15,8 @@ event Perception {
 	val time : int
 	val objects : List<EnvironmentObject>
 	val pos : Position
-	val bodyId : UID
-	new (time : int, bodyID : UID, objects : List<EnvironmentObject>, pos : Position){
+	val bodyId : UUID
+	new (time : int, bodyID : UUID, objects : List<EnvironmentObject>, pos : Position){
 		this.time = time
 		this.bodyId = bodyID
 		this.objects = objects
@@ -26,9 +26,14 @@ event Perception {
 }
 
 //Action of an agent -> not needed
-event BodyPerception
 
-event AgentInfluence
+/**
+ * Agent emit an influence
+ */
+event Influence {
+	
+	
+}
 
 event RunEndOfStep
 
