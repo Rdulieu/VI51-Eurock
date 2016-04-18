@@ -15,6 +15,10 @@ public class Environment {
 	
 	//ArrayList<EnvironmentObject> objectsList; //not the good choice for data structure
 	
+	/**
+	 * creation of the environment that will contain the jboxworld and the agent world
+	 * @param objects
+	 */
 	public Environment (Collection<EnvironmentObject> objects) {
 		Vec2 gravity = new Vec2(0.0f, 0.0f);
 		boolean doSleep = true;

@@ -6,4 +6,8 @@ public class StaticObject extends EnvironmentObject {
 		super(x,y);
 	}
 
+	public StaticObject(float x, float y,float width,float height){
+		super(x,y,width,height);
+	}
+
 }

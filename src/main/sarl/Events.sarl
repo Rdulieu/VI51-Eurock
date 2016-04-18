@@ -1,7 +1,7 @@
 import tx52.environment.EnvironmentObject
-import tx52.environment.Position
 import java.util.List
 import java.util.UUID
+import org.arakhne.afc.math.continous.object2d.Point2f
 
 /**
  * 
@@ -14,9 +14,9 @@ import java.util.UUID
 event Perception {
 	val time : int
 	val objects : List<EnvironmentObject>
-	val pos : Position
+	val pos : Point2f
 	val bodyId : UUID
-	new (time : int, bodyID : UUID, objects : List<EnvironmentObject>, pos : Position){
+	new (time : int, bodyID : UUID, objects : List<EnvironmentObject>, pos : Point2f){
 		this.time = time
 		this.bodyId = bodyID
 		this.objects = objects

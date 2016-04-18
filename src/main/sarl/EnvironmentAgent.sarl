@@ -4,10 +4,13 @@ import java.util.TreeMap
 import tx52.environment.Environment
 import tx52.environment.EnvironmentListener
 import tx52.environment.EnvironmentObject
+import tx52.environment.StaticObject
+import tx52.environment.DynamicObject
+import java.util.UUID
 
 /**
  * @author Olivier
- *
+ * 
  */
 agent EnvironmentAgent { //TODO récupérer le code d'IA54 et l'adapter
 	
@@ -19,8 +22,17 @@ agent EnvironmentAgent { //TODO récupérer le code d'IA54 et l'adapter
 	
 	on Initialize{
 		println("\nTest")
-		var objects = <EnvironmentObject>newArrayList(new EnvironmentObject(0,0))
-		environment = new Environment(objects)
+		
+		//we create the static objects
+		var objects = <EnvironmentObject>newArrayList(new StaticObject(0,0)) 
+		objects.add(new StaticObject(10,10,5,5))
+		environment = new Environment(objects) 
+		
+		/*we create the agent and they will create their body ?
+		* I'm not sure about this because an agent cannot access the world. In this case they should ask for the creation of they body
+		* maybe it's easier to create the body and the agent separately and then, link them.
+		*/
+		
 		//fireEnvironmentChange
 	}
 	

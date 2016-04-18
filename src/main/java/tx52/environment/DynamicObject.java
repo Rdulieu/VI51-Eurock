@@ -16,7 +16,7 @@ public class DynamicObject extends EnvironmentObject{
 	
 	//Agentid créé son corps : on appellera ce constructeur lors de la création de l'agent
 	// P.S : la position x,y sera surement donné par l'agent également
-	public DynamicObject(float x, float y,UUID agentId, World w){
+	public DynamicObject(float x, float y,float width,float height,UUID agentId,World w){
 		super(x,y);
 		id = agentId;
 		// peut-être inutile si l'agent a déjà un ID : ID agent = ID body

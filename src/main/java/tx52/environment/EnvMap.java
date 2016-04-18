@@ -2,6 +2,8 @@ package tx52.environment;
 
 import java.util.Collection;
 
+import org.arakhne.afc.math.continous.object2d.Rectangle2f;
+
 /**
  * the world map
  * 
@@ -11,10 +13,15 @@ import java.util.Collection;
 
 public class EnvMap {
 	
+	//TODO create a list of RTree that represent the world
 	private RTree objectList;
 	
+	//Parameters of the world
+	private static final float width=100; 
+	private static final float height=100;
+	
 	EnvMap(Collection<EnvironmentObject> objects){
-		objectList = new RTree(objects);
+		objectList = new RTree(objects,new Rectangle2f(0,0,width,height));
 	}
 
 }

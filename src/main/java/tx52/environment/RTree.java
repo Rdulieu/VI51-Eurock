@@ -1,13 +1,19 @@
 package tx52.environment;
 
 import java.util.Collection;
+import org.arakhne.afc.math.continous.object2d.Rectangle2f;
 
 public class RTree {
 	
 	private TreeNode root;
 	
-	RTree(Collection<EnvironmentObject> objects){
-		setRoot(new TreeNode(new MinimumBoundingRectangle())); //TODO need to define what is the default box
+	/**
+	 * creation of a RTree with his range represented by a box
+	 * @param objects
+	 * @param box
+	 */
+	RTree(Collection<EnvironmentObject> objects,Rectangle2f box){
+		setRoot(new TreeNode(new Rectangle2f(box)));
 		for( EnvironmentObject o : objects){
 			getRoot().add(o);
 		}

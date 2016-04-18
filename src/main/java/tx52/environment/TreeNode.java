@@ -3,18 +3,24 @@ package tx52.environment;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import org.arakhne.afc.math.continous.object2d.Rectangle2f;
+
 public class TreeNode {
 
-	private MinimumBoundingRectangle box;
+	private Rectangle2f box;
 	private ArrayList<EnvironmentObject> objects;
 	private TreeNode[] children = null;
 	
 
-	TreeNode(MinimumBoundingRectangle box) {
+	TreeNode(Rectangle2f box) {  //Création d'une branche de l'arbre en lui indiquant sa portée (via un rectangle2D)
 		this.setBox(box);
 		objects = new ArrayList<EnvironmentObject>();
 	}
 
+	/**
+	 * add an object in the tree
+	 * @param o
+	 */
 	public void add(EnvironmentObject o) {
 		if(objects.size()<15 && getChildren()== null){  //TODO define 15 as a parameter
 			objects.add(o);
@@ -65,16 +71,16 @@ public class TreeNode {
 		
 	}
 
-	private MinimumBoundingRectangle createChildBox(MinimumBoundingRectangle box2, int i) {
+	private Rectangle2f createChildBox(Rectangle2f box2, int i) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public MinimumBoundingRectangle getBox() {
+	public Rectangle2f getBox() {
 		return box;
 	}
 
-	public void setBox(MinimumBoundingRectangle box) {
+	public void setBox(Rectangle2f box) {
 		this.box = box;
 	}
 
