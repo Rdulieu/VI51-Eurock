@@ -53,7 +53,7 @@ public class TreeNode {
 		int n=0;
 		
 		for(int i=0;i<4;i++){  //TODO define 4 as a parameter
-			if(getChildren()[i].getBox().intersects(e.getBox())){
+			if(getChildren()[i].getBox().intersects(e.getBox())){ //TODO bonne utilisation de la fonction intersects 
 				n++;
 				index=i;
 				//break ? 

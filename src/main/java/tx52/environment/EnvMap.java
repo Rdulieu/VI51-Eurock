@@ -20,8 +20,22 @@ public class EnvMap {
 	private static final float width=100; 
 	private static final float height=100;
 	
+	/**
+	 * Initialisation
+	 * @param objects
+	 */
 	EnvMap(Collection<EnvironmentObject> objects){
 		objectList = new RTree(objects,new Rectangle2f(0,0,width,height));
+	}
+
+	/**
+	 * Add an object
+	 * @param objects
+	 */
+	public void addObjects(Collection<EnvironmentObject> objects) {
+		for( EnvironmentObject o : objects){
+			objectList.getRoot().add(o);
+		}
 	}
 
 }

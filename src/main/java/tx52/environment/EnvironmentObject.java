@@ -1,12 +1,17 @@
 package tx52.environment;
 
+import java.util.UUID;
+
 import org.arakhne.afc.math.continous.object2d.Point2f;
 import org.arakhne.afc.math.continous.object2d.Rectangle2f;
+import org.jbox2d.dynamics.Body;
 
 public class EnvironmentObject {
 	
-	private Point2f position;
-	private Rectangle2f box;
+	protected Point2f position;
+	protected Rectangle2f box;
+	protected UUID id;
+	protected Body body;
 	// pas besoin du type objectType. On utilisera l'héritage 
 	
 	/**

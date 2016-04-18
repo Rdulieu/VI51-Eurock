@@ -11,8 +11,6 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 
 public class DynamicObject extends EnvironmentObject{
-	private UUID id;
-	private Body body;
 	
 	//Agentid créé son corps : on appellera ce constructeur lors de la création de l'agent
 	// P.S : la position x,y sera surement donné par l'agent également
@@ -25,7 +23,7 @@ public class DynamicObject extends EnvironmentObject{
 		}
 		BodyDef bd = new BodyDef();
 		bd.position.set(x, y);
-		bd.type = BodyType.KINEMATIC;
+		bd.type = BodyType.KINEMATIC; //maybe DYNAMIC type is better
 		Vec2[] vertices = { new Vec2(0.0f, -10.0f), new Vec2(+10.0f, +10.0f), new Vec2(-10.0f, +10.0f) };
 		PolygonShape ps = new PolygonShape();
 		ps.set(vertices, vertices.length);

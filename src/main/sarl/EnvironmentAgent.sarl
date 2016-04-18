@@ -23,10 +23,16 @@ agent EnvironmentAgent { //TODO récupérer le code d'IA54 et l'adapter
 	on Initialize{
 		println("\nTest")
 		
+		//we create the environment
+		environment = new Environment()
+		
 		//we create the static objects
-		var objects = <EnvironmentObject>newArrayList(new StaticObject(0,0)) 
-		objects.add(new StaticObject(10,10,5,5))
-		environment = new Environment(objects) 
+		var objects = <EnvironmentObject>newArrayList(new StaticObject(0,0)) //not added to jbox
+		objects.add(new StaticObject(10,10,5,5,environment.getjBoxWorld()))
+		for(var f=20;f<90;f+=5){
+			objects.add(new DynamicObject(f,f,2,2,null,environment.getjBoxWorld()))// null in UUID field indicate that the body isn't created by his agent
+		}
+		environment.addObjectToWorld(objects)
 		
 		/*we create the agent and they will create their body ?
 		* I'm not sure about this because an agent cannot access the world. In this case they should ask for the creation of they body
