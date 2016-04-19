@@ -41,7 +41,9 @@ agent EnvironmentAgent { //TODO récupérer le code d'IA54 et l'adapter
 		*/
 		
 		//fireEnvironmentChange
+		environment.printMap()
 		emit(new RunBeginingOfStep)
+		environment.printMap()
 	}
 	
 /*	def fireEnvironmentChange {

@@ -23,8 +23,10 @@ public class DepthFirstIterator {
 	
 	public TreeNode next(){
 		TreeNode top = stack.pop();
-		for(TreeNode child : top.getChildren()){
-			stack.push(child);
+		if(top.hasChild()){
+			for(TreeNode child : top.getChildren()){
+				stack.push(child);
+			}
 		}
 		return top;
 	}	

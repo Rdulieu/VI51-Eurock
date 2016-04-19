@@ -54,7 +54,39 @@ public class Environment {
 	public void setWorld(EnvMap world) {
 		this.world = world;
 	}
+	
+	/**
+	 * this function print in console the world
+	 */
+	public void printMap(){
+		
+		System.out.printf("Map size : Width=%f Height=%f\n\n",EnvMap.width,EnvMap.height);
+		System.out.println("Status of the RTree :");
+		System.out.println("--Root--");
+		DepthFirstIterator it = new DepthFirstIterator(world.getObjectList());
+		TreeNode node = null;
+		if(it.hasNext()){
+			node = it.next();
+			for(EnvironmentObject object : node.getObjects()){
+				System.out.println(object);
+			}
+		}
+		
+		while(it.hasNext()){
+			System.out.println("--Next Node--");
+			node = it.next();
+			for(EnvironmentObject object : node.getObjects()){
+				System.out.println(object);
+			}
+			
+		}
+		
+		
+	}
 
+	/**
+	 * 1 iteration of simulation
+	 */
 	public void runJBox() {
 		float timeStep = 1.0f / 60.f;
 		int velocityIterations = 6;
@@ -68,10 +100,5 @@ public class Environment {
 		    float angle = body.getAngle();
 		    System.out.printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
 	    }
-
-		
 	}
-	
-	
-	
 }

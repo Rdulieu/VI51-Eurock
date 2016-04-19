@@ -11,7 +11,7 @@ public class EnvironmentObject {
 	protected Point2f position;
 	protected Rectangle2f box;
 	protected UUID id;
-	protected Body body;
+	protected Body body; //utile ?
 	// pas besoin du type objectType. On utilisera l'héritage 
 	
 	/**
@@ -47,6 +47,13 @@ public class EnvironmentObject {
 	}
 	public void setPosition(Point2f position) {
 		this.position = position;
+	}
+	
+	@Override	
+	public String toString(){
+		
+		return "UUID : " + id + "   Position : (" + position.getX() + "," + position.getY() + ")";
+		
 	}
 	
 }

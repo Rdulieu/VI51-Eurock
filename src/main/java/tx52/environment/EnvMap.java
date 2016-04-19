@@ -17,9 +17,17 @@ public class EnvMap {
 	private RTree objectList;
 	
 	//Parameters of the world
-	private static final float width=100; 
-	private static final float height=100;
+	static final float width=100; 
+	static final float height=100;
 	
+	public RTree getObjectList() {
+		return objectList;
+	}
+
+	public void setObjectList(RTree objectList) {
+		this.objectList = objectList;
+	}
+
 	/**
 	 * Initialisation
 	 * @param objects

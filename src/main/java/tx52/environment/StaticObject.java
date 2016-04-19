@@ -8,6 +8,8 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 
 public class StaticObject extends EnvironmentObject {
+	
+	//Do we need an UUID for static objects ?
 
 	public StaticObject(float x, float y){
 		super(x,y);

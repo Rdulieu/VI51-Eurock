@@ -44,6 +44,14 @@ public class TreeNode {
 		
 	}
 	
+	public ArrayList<EnvironmentObject> getObjects() {
+		return objects;
+	}
+
+	public void setObjects(ArrayList<EnvironmentObject> objects) {
+		this.objects = objects;
+	}
+
 	/**
 	 * should be use only if a child was created
 	 * @param e
@@ -136,6 +144,14 @@ public class TreeNode {
 					stack.push(child);
 				} // do something with top
 			}
+		}
+	}
+
+	public boolean hasChild() {
+		if(children==null){
+			return false;
+		}else{
+			return true;
 		}
 	}
 	
