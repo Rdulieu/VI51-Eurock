@@ -1,12 +1,12 @@
-import io.sarl.core.Logging
+import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
-import java.util.TreeMap
+import io.sarl.core.Lifecycle
+import io.sarl.core.Logging
+import tx52.environment.DynamicObject
 import tx52.environment.Environment
 import tx52.environment.EnvironmentListener
 import tx52.environment.EnvironmentObject
 import tx52.environment.StaticObject
-import tx52.environment.DynamicObject
-import java.util.UUID
 
 /**
  * @author Olivier
@@ -15,6 +15,7 @@ import java.util.UUID
 agent EnvironmentAgent { //TODO récupérer le code d'IA54 et l'adapter
 	
 	uses Logging
+	uses DefaultContextInteractions, Lifecycle
 	var environment : Environment
 	var listeners = <EnvironmentListener>newArrayList
 	var time = 0
@@ -26,11 +27,11 @@ agent EnvironmentAgent { //TODO récupérer le code d'IA54 et l'adapter
 		//we create the environment
 		environment = new Environment()
 		
-		//we create the static objects
-		var objects = <EnvironmentObject>newArrayList(new StaticObject(0,0)) //not added to jbox
-		objects.add(new StaticObject(10,10,5,5,environment.getjBoxWorld()))
+		//we create the objects
+		var objects = <EnvironmentObject>newArrayList(new StaticObject(0,0,5,5,environment.getjBoxWorld))
+		objects.add(new StaticObject(10,10,5,5,environment.getjBoxWorld))
 		for(var f=20;f<90;f+=5){
-			objects.add(new DynamicObject(f,f,2,2,null,environment.getjBoxWorld()))// null in UUID field indicate that the body isn't created by his agent
+			objects.add(new DynamicObject(f,f,2,2,null,environment.getjBoxWorld))// null in UUID field indicate that the body isn't created by his agent
 		}
 		environment.addObjectToWorld(objects)
 		
@@ -40,6 +41,7 @@ agent EnvironmentAgent { //TODO récupérer le code d'IA54 et l'adapter
 		*/
 		
 		//fireEnvironmentChange
+		emit(new RunBeginingOfStep)
 	}
 	
 /*	def fireEnvironmentChange {
@@ -59,7 +61,12 @@ agent EnvironmentAgent { //TODO récupérer le code d'IA54 et l'adapter
 
 	//initialize the turn (update world state, give perceptions to AI, fire all the agents, *increase time) *or in endOfStep 
 	on RunBeginingOfStep {
+		
 		//TODO write RunBeginingOfStep
+		
+		//test
+		environment.runJBox(); //1 step of simulation
+		
 		synchronized(this){
 			
 		}

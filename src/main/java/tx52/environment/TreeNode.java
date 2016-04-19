@@ -12,7 +12,7 @@ public class TreeNode {
 	private TreeNode[] children = null;
 	
 
-	TreeNode(Rectangle2f box) {  //Création d'une branche de l'arbre en lui indiquant sa portée (via un rectangle2D)
+	TreeNode(Rectangle2f box) {  //Création d'une branche de l'arbre en lui indiquant sa portée (via un rectangle2f)
 		this.setBox(box);
 		objects = new ArrayList<EnvironmentObject>();
 	}
@@ -22,13 +22,13 @@ public class TreeNode {
 	 * @param o
 	 */
 	public void add(EnvironmentObject o) {
-		if(objects.size()<15 && getChildren()== null){  //TODO define 15 as a parameter
+		if(objects.size()<15 && getChildren()== null){  //15 is an arbitrary max number of object
 			objects.add(o);
 		}else{
 			if(getChildren()==null){
-				setChildren(new TreeNode[4]); //TODO define 4 as a parameter
+				setChildren(new TreeNode[4]); //4 is an arbitrary number of child
 				for(int i=0;i<4;i++){
-					getChildren()[i]=new TreeNode(createChildBox(getBox(),i));
+					getChildren()[i]=new TreeNode(createChildBox(i));
 				}
 			}
 			
@@ -56,7 +56,6 @@ public class TreeNode {
 			if(getChildren()[i].getBox().intersects(e.getBox())){ //TODO bonne utilisation de la fonction intersects 
 				n++;
 				index=i;
-				//break ? 
 			}
 		}
 		if(n==1){
@@ -71,9 +70,36 @@ public class TreeNode {
 		
 	}
 
-	private Rectangle2f createChildBox(Rectangle2f box2, int i) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * create a new box for the child number i following this scheme :
+	 *  _______
+	 * |_1_|_2_|
+	 * |_3_|_4_|
+	 * 
+	 * @param box2
+	 * @param i
+	 * @return
+	 */
+	private Rectangle2f createChildBox(int i) {
+		Rectangle2f returnBox = new Rectangle2f();
+			switch(i){
+			case 0:
+				returnBox.setFromCorners(box.getCenterX(),box.getCenterY(),box.getMinX(),box.getMaxY());
+				break;
+			case 1:
+				returnBox.setFromCorners(box.getCenterX(),box.getCenterY(),box.getMaxX(),box.getMaxY());
+				break;
+			case 2:
+				returnBox.setFromCorners(box.getCenterX(),box.getCenterY(),box.getMinX(),box.getMinY());
+				break;
+			case 3:
+				returnBox.setFromCorners(box.getCenterX(),box.getCenterY(),box.getMaxX(),box.getMinY());
+				break;
+			default:
+				returnBox = box;
+			}
+			return returnBox;
+
 	}
 
 	public Rectangle2f getBox() {
@@ -93,9 +119,10 @@ public class TreeNode {
 	}
 
 	/**
-	 * fonction temporaire -> remplaçable par l'iterateur
+	 * deprecated : use DepthFirstIterator instead -> better performance
 	 * @param t
 	 */
+	@Deprecated
 	public void/*?*/ depthFirst(RTree t){
 
 		Stack<TreeNode> stack = new Stack<TreeNode>();

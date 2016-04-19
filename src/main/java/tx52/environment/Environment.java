@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.World;
 import org.jbox2d.pooling.IWorldPool;
 
@@ -52,6 +53,23 @@ public class Environment {
 
 	public void setWorld(EnvMap world) {
 		this.world = world;
+	}
+
+	public void runJBox() {
+		float timeStep = 1.0f / 60.f;
+		int velocityIterations = 6;
+		int positionIterations = 2;
+		 
+		
+		jBoxWorld.step(timeStep, velocityIterations, positionIterations);
+	    Body templist = jBoxWorld.getBodyList();
+	    for (Body body = templist; body != null; body = body.m_next) {
+		    Vec2 position = body.getPosition();
+		    float angle = body.getAngle();
+		    System.out.printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
+	    }
+
+		
 	}
 	
 	

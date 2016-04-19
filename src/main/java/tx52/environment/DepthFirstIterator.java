@@ -21,7 +21,7 @@ public class DepthFirstIterator {
 		return !stack.isEmpty();
 	}
 	
-	public TreeNode next(){ //TODO Comprendre celui la et le modifier
+	public TreeNode next(){
 		TreeNode top = stack.pop();
 		for(TreeNode child : top.getChildren()){
 			stack.push(child);

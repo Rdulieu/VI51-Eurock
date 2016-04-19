@@ -13,7 +13,7 @@ import org.arakhne.afc.math.continous.object2d.Rectangle2f;
 
 public class EnvMap {
 	
-	//TODO create a list of RTree that represent the world
+	//TODO create a list of RTree that represent the world -> Cohen Sutherland ?
 	private RTree objectList;
 	
 	//Parameters of the world
