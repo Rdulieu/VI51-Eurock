@@ -32,8 +32,8 @@ public class EnvironmentObject {
 	 * @param height
 	 */
 	public EnvironmentObject(float x, float y,float width,float height) {
-		position = new Point2f(x, y);
-		box = new Rectangle2f(position.getX(),position.getY(),width,height);
+		box = new Rectangle2f(x,y,width,height);
+		box.setFromCenter(x,y,x+width/2,y+height/2);
 	}
 	
 	public Rectangle2f getBox() {
