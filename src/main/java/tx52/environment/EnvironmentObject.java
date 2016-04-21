@@ -22,6 +22,7 @@ public class EnvironmentObject {
 	 */
 	public EnvironmentObject(float x, float y, UUID id) { 
 		this.id = id;
+		if(id==null)id=UUID.randomUUID();
 		this.position = new Point2f(x, y);
 		this.box = new Rectangle2f(position,position);
 	}
@@ -35,6 +36,7 @@ public class EnvironmentObject {
 	 */
 	public EnvironmentObject(float x, float y,float width,float height,UUID id) {
 		this.id = id;
+		if(id==null)id=UUID.randomUUID();
 		box = new Rectangle2f(x,y,width,height);
 		box.setFromCenter(x,y,x+width/2,y+height/2);
 		position = new Point2f(box.getCenterX(),box.getCenterY());
