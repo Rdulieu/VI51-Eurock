@@ -63,6 +63,7 @@ public class Environment {
 		System.out.printf("Map size : Width=%f Height=%f\n\n",EnvMap.width,EnvMap.height);
 		System.out.println("Status of the RTree :");
 		System.out.println("--Root--");
+		
 		DepthFirstIterator it = new DepthFirstIterator(world.getObjectList());
 		TreeNode node = null;
 		if(it.hasNext()){
@@ -79,7 +80,7 @@ public class Environment {
 				System.out.println(object);
 			}
 			
-		}
+		}System.out.println("***END OF TREE***\n");
 		
 		
 	}
@@ -92,13 +93,13 @@ public class Environment {
 		int velocityIterations = 6;
 		int positionIterations = 2;
 		 
-		
+		System.out.println("--Jbox2D Status--");
 		jBoxWorld.step(timeStep, velocityIterations, positionIterations);
 	    Body templist = jBoxWorld.getBodyList();
 	    for (Body body = templist; body != null; body = body.m_next) {
 		    Vec2 position = body.getPosition();
 		    float angle = body.getAngle();
 		    System.out.printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
-	    }
+	    }System.out.println("***END OF JBOX WORLD***\n");
 	}
 }
