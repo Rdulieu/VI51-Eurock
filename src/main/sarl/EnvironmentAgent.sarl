@@ -41,7 +41,6 @@ agent EnvironmentAgent { //TODO récupérer le code d'IA54 et l'adapter
 		*/
 		
 		//fireEnvironmentChange
-		
 		environment.printMap()
 		emit(new RunBeginingOfStep)
 		environment.printMap()
@@ -69,9 +68,6 @@ agent EnvironmentAgent { //TODO récupérer le code d'IA54 et l'adapter
 		
 		//test
 		environment.runJBox(); //1 step of simulation
-		environment.runJBox();
-		environment.runJBox();
-		environment.runJBox();
 		
 		synchronized(this){
 			
