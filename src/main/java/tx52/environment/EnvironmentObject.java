@@ -18,10 +18,12 @@ public class EnvironmentObject {
 	 * creation of the object with his position (x,y)
 	 * @param x
 	 * @param y
+	 * @param id
 	 */
-	public EnvironmentObject(float x, float y) { 
-		position = new Point2f(x, y);
-		box = new Rectangle2f(position,position);
+	public EnvironmentObject(float x, float y, UUID id) { 
+		this.id = id;
+		this.position = new Point2f(x, y);
+		this.box = new Rectangle2f(position,position);
 	}
 	
 	/**
@@ -31,9 +33,10 @@ public class EnvironmentObject {
 	 * @param width
 	 * @param height
 	 */
-	public EnvironmentObject(float x, float y,float width,float height) {
-		box = new Rectangle2f(x,y,width,height); //init the box
-		box.setFromCenter(x,y,x+width/2,y+height/2); // create the box from the center
+	public EnvironmentObject(float x, float y,float width,float height,UUID id) {
+		this.id = id;
+		box = new Rectangle2f(x,y,width,height);
+		box.setFromCenter(x,y,x+width/2,y+height/2);
 		position = new Point2f(box.getCenterX(),box.getCenterY());
 	}
 	

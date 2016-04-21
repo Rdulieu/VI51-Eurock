@@ -1,12 +1,10 @@
 package tx52.environment;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.World;
-import org.jbox2d.pooling.IWorldPool;
 
 public class Environment {
 	World jBoxWorld;

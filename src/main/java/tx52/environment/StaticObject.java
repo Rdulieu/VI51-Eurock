@@ -1,5 +1,7 @@
 package tx52.environment;
 
+import java.util.UUID;
+
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
@@ -11,12 +13,12 @@ public class StaticObject extends EnvironmentObject {
 	
 	//Do we need an UUID for static objects ?
 
-	public StaticObject(float x, float y){
-		super(x,y);
+	public StaticObject(float x, float y,UUID id){
+		super(x,y,id);
 	}
 
-	public StaticObject(float x, float y,float width,float height,World w){
-		super(x,y,width,height);
+	public StaticObject(float x, float y,float width,float height,UUID id,World w){
+		super(x,y,width,height,id);
 		BodyDef bd = new BodyDef();
 		bd.position.set(x,y);  
 		bd.type = BodyType.STATIC;

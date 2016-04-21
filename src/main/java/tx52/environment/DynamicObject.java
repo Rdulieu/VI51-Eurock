@@ -2,13 +2,10 @@
 
 import java.util.UUID;
 
-import org.arakhne.afc.math.continous.object2d.Circle2f;
-import org.arakhne.afc.math.continous.object2d.Point2f;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.collision.shapes.ShapeType;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
@@ -17,7 +14,8 @@ import org.jbox2d.dynamics.World;
 
 public class DynamicObject extends EnvironmentObject{
 	
-	//Agentid créé son corps : on appellera ce constructeur lors de la création de l'agent
+
+	//Agent créé son corps : on appellera ce constructeur lors de la création de l'agent
 	// P.S : la position x,y sera surement donné par l'agent également
 	/**
 	 * 
@@ -29,16 +27,11 @@ public class DynamicObject extends EnvironmentObject{
 	 * @param w
 	 */
 	public DynamicObject(float x, float y,float width,float height,UUID agentId,World w){
-		super(x,y,width,height);
-		id = agentId;
-		// peut-être inutile si l'agent a déjà un ID : ID agent = ID body
-		if (id == null) {
-			id = UUID.randomUUID();
-		}
+		super(x,y,width,height,agentId);
 		BodyDef bd = new BodyDef();
 		bd.position.set(x, y);
 		bd.type = BodyType.KINEMATIC; //maybe DYNAMIC type is better
-		Vec2[] vertices = { new Vec2(0.0f, -10.0f), new Vec2(+10.0f, +10.0f), new Vec2(-10.0f, +10.0f) }; //need to change this shape generation
+		Vec2[] vertices = { new Vec2(0.0f, -10.0f), new Vec2(+10.0f, +10.0f), new Vec2(-10.0f, +10.0f) };//need to change this shape generation
 		PolygonShape ps = new PolygonShape();
 		ps.set(vertices, vertices.length);
 
@@ -48,31 +41,31 @@ public class DynamicObject extends EnvironmentObject{
 		fd.friction = 0.3f;
 		fd.restitution = 0.5f;
 		fd.userData = id; 
-		// what is userdata ? can we store UUID in this field ?
+		// what is userData ? can we store UUID in this field ?
 
 		body = w.createBody(bd);
 		body.createFixture(fd);
-		
+
 		//set the box to the exact object
 
-		Fixture fixtureList = body.getFixtureList();
-		for (Fixture f = fixtureList;f!=null;f=f.m_next)
-		{
-			ShapeType shapeType = f.getType();
-			if ( shapeType == ShapeType.CIRCLE)
-			{
-			    CircleShape circleShape = (CircleShape) f.getShape();
-			    // not possible in dynamic objects for now
-			}
-			else if ( shapeType == ShapeType.POLYGON )
-			{
-			    PolygonShape polygonShape = (PolygonShape)f.getShape();
-			    for(int i=0;i<polygonShape.getVertexCount();i++){
-			    	Vec2 vecteur = polygonShape.getVertex(i);
-			    	box.add(vecteur.x,vecteur.y); //add all points of the shape to the box 
-			    }   	
-			}
-		}
+				Fixture fixtureList = body.getFixtureList();
+				for (Fixture f = fixtureList;f!=null;f=f.m_next)
+				{
+					ShapeType shapeType = f.getType();
+					if ( shapeType == ShapeType.CIRCLE)
+					{
+					    CircleShape circleShape = (CircleShape) f.getShape();
+					    // not possible in dynamic objects for now
+					}
+					else if ( shapeType == ShapeType.POLYGON )
+					{
+					    PolygonShape polygonShape = (PolygonShape)f.getShape();
+					    for(int i=0;i<polygonShape.getVertexCount();i++){
+					    	Vec2 vecteur = polygonShape.getVertex(i);
+					    	box.add(vecteur.x,vecteur.y); //add all points of the shape to the box 
+					    }   	
+					}
+				}
 	}
 
 }
