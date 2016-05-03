@@ -3,10 +3,10 @@ import java.util.Map
 import java.util.TreeMap
 import java.util.UUID
 import org.arakhne.afc.math.discrete.object2d.Point2i
-import tx52.environment.AgentBody
-import tx52.environment.EnvMap
-import tx52.environment.EnvironmentObject
-import tx52.environment.RTree
+import vi51.environment.AgentBody
+import vi51.environment.EnvMap
+import vi51.environment.EnvironmentObject
+import vi51.environment.RTree
 
 /**
  * 

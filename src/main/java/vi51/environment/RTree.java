@@ -1,4 +1,4 @@
-package tx52.environment;
+package vi51.environment;
 
 import java.util.Collection;
 import org.arakhne.afc.math.continous.object2d.Rectangle2f;

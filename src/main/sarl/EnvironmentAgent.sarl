@@ -2,11 +2,11 @@ import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.core.Logging
-import tx52.environment.DynamicObject
-import tx52.environment.Environment
-import tx52.environment.EnvironmentListener
-import tx52.environment.EnvironmentObject
-import tx52.environment.StaticObject
+import vi51.environment.DynamicObject
+import vi51.environment.Environment
+import vi51.environment.EnvironmentListener
+import vi51.environment.EnvironmentObject
+import vi51.environment.StaticObject
 
 /**
  * @author Olivier
