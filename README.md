@@ -1,2 +1,1 @@
-# TX52-StrategyGameEngine
-TX52 project
+# VI51-Eurockeennes
