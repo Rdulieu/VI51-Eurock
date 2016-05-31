@@ -1,6 +1,7 @@
 package vi51.environment;
 
 import java.util.Collection;
+
 import org.arakhne.afc.math.continous.object2d.Rectangle2f;
 
 public class RTree {
@@ -14,8 +15,10 @@ public class RTree {
 	 */
 	RTree(Collection<EnvironmentObject> objects,Rectangle2f box){
 		setRoot(new TreeNode(new Rectangle2f(box)));
-		for( EnvironmentObject o : objects){
-			getRoot().add(o);
+		if(objects!=null){
+			for( EnvironmentObject o : objects){
+				getRoot().add(o);
+			}
 		}
 	}
 

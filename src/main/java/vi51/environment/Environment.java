@@ -1,28 +1,32 @@
 package vi51.environment;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.LinkedBlockingDeque;
 
+import org.arakhne.afc.math.continous.object2d.Rectangle2f;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.World;
+
+import vi51.util.ConstantContainer;
 
 public class Environment {
 	World jBoxWorld;
 	EnvMap world;
+	LinkedBlockingDeque<EnvironmentEvent> eventFire = new LinkedBlockingDeque<EnvironmentEvent>();
 	//float timeStep;  // c'est plutot l'agent qui contient cette variable 
 	//int velocityIterations;
 	//int positionIterations;
-	
-	//ArrayList<EnvironmentObject> objectsList; //not the good choice for data structure
 	
 	/**
 	 * creation of the environment. Setup the Jbox2DWorld and create the EnvMap
 	 * @param objects
 	 */
-	public Environment () {
+	public Environment (float width, float height) {
 		Vec2 gravity = new Vec2(0.0f, 0.0f);
 		this.jBoxWorld = new World(gravity);
 		jBoxWorld.setAllowSleep(true);
+		this.world = new EnvMap(width,height);
 	}
 
 	/**
@@ -30,13 +34,12 @@ public class Environment {
 	 * @param objects
 	 */
 	public void addObjectToWorld(Collection<EnvironmentObject> objects) {
-		if(this.world!=null){	
+		if(this.world.getObjectList()!=null){
 			this.world.addObjects(objects);
 		}else{
-			this.world = new EnvMap(objects);
+			this.world.setObjectList(new RTree(objects,new Rectangle2f(0,0,ConstantContainer.MAP_WIDTH,ConstantContainer.MAP_HEIGHT)));
 		}
 	}
-
 	public World getjBoxWorld() {
 		return jBoxWorld;
 	}
@@ -58,7 +61,7 @@ public class Environment {
 	 */
 	public void printMap(){
 		
-		System.out.printf("Map size : Width=%f Height=%f\n\n",EnvMap.width,EnvMap.height);
+		System.out.printf("Map size : Width=%f Height=%f\n\n",world.getWidth(),world.getHeight());
 		System.out.println("Status of the RTree :");
 		System.out.println("--Root--");
 		
@@ -87,17 +90,51 @@ public class Environment {
 	 * 1 iteration of simulation
 	 */
 	public void runJBox() {
-		float timeStep = 1.0f / 60.f;
-		int velocityIterations = 6;
-		int positionIterations = 2;
+		float timeStep = ConstantContainer.DELTA_T;
+		int velocityIterations = ConstantContainer.VELOCITY_ITERATIONS;
+		int positionIterations = ConstantContainer.POSITION_ITERATIONS;
 		 
-		System.out.println("--Jbox2D Status--");
+//		System.out.println("--Jbox2D Status--");
 		jBoxWorld.step(timeStep, velocityIterations, positionIterations);
-	    Body templist = jBoxWorld.getBodyList();
-	    for (Body body = templist; body != null; body = body.m_next) {
-		    Vec2 position = body.getPosition();
-		    float angle = body.getAngle();
-		    System.out.printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
-	    }System.out.println("***END OF JBOX WORLD***\n");
+//	    Body templist = jBoxWorld.getBodyList();
+//	    for (Body body = templist; body != null; body = body.m_next) {
+//		    Vec2 position = body.getPosition();
+//		    float angle = body.getAngle();
+//		    System.out.printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
+//	    }System.out.println("***END OF JBOX WORLD***\n");
 	}
+
+	/**
+	 * change the tree in fucntion of the movements of all objects
+	 */
+	public void updateTree() {
+		DepthFirstIterator it = new DepthFirstIterator(world.getObjectList());
+		TreeNode node = null;
+		ArrayList<EnvironmentObject> objectToAdd = new ArrayList<EnvironmentObject>();
+		
+		while(it.hasNext()){
+			node = it.next();
+			ArrayList<EnvironmentObject> objectsToRemove = new ArrayList<EnvironmentObject>();
+			for(EnvironmentObject object : node.getObjects()){
+				if(!node.getBox().contains(object.getBox())){
+					objectToAdd.add(object);
+					objectsToRemove.add(object);
+				}
+			}
+			for(EnvironmentObject object : objectsToRemove){
+				node.removeObject(object);
+			}
+		}
+		addObjectToWorld(objectToAdd);
+		
+	}
+
+	public void fireEnvironmentChanged(EnvironmentEvent event) {
+		this.eventFire.addLast(event);
+	}
+
+	public LinkedBlockingDeque<EnvironmentEvent> getEventFire() {
+		return eventFire;
+	}
+
 }

@@ -1,0 +1,75 @@
+package ^agent
+
+import java.util.ArrayList
+import java.util.List
+import java.util.UUID
+import org.arakhne.afc.math.continous.object2d.Point2f
+import org.arakhne.afc.math.continous.object2d.Vector2f
+import vi51.environment.AgentBody
+import vi51.environment.EnvironmentChangeQuery
+import vi51.environment.Perceivable
+import vi51.environment.RTree
+
+/**
+ * @author Olivier
+ *
+ */
+ 
+ /** Capacity to manage the map */
+capacity MapManager {
+	/** Replies the number of bodies in the map */
+	def getBodyCount : int
+	
+	/** execute the list of influences 
+	 * 	@return true if game is over? *TBD* */
+	def resolveInfluences (actions : List<EnvironmentChangeQuery>) : boolean
+	
+	/** replies the perceptions */
+	def sendPerceptions (time : float)
+	
+	/** replies the width of the map. */
+	def getMapWidth : float
+	
+	/** replies the height of the map. */
+	def getMapHeight : float
+	
+	/** replies all the objects */
+	def getAllObjects : RTree
+	
+	/** Replies a specific body */
+	def getAgentBody(id : UUID) : AgentBody
+	
+	/** Create basic Unit */
+	def createUnit(perceptionDistance : float) : AgentBody
+	
+	/** Create the map surroundings walls */
+	def createMapSurroundings
+	
+	def updateTree
+	
+	def RunJbox
+	
+	def updateWindow
+	
+	def printTree
+
+	def SpawnButtonRequest : boolean
+	
+}
+
+
+capacity EndOfTurn {
+	def sendPerception(time : float, bodyID : UUID, objects : ArrayList<Perceivable>,position : Point2f)
+	
+}
+
+capacity PhysicEnvironment {
+	
+	/** Invoked to send the influence to the environment.
+	 * 
+	 * @param linearInfluence is the linear influence to apply on the object.
+	 * @param angularInfluence is the angular influence to apply on the object.
+	 */
+	def influenceKinematic(linearInfluence : Vector2f = null, angularInfluence : float = 0f)
+	
+}

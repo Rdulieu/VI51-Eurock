@@ -1,0 +1,4 @@
+1) Download the src files
+2) create a new project in Eclipse SARL
+3) in java build path add : math-13.0-SNAPSHOT.jar and jbox2d-library-2.3.1-SNAPSHOT.jar
+4) Launch the agent Boot.sarl

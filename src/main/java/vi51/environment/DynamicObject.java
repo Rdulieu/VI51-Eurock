@@ -2,23 +2,22 @@
 
 import java.util.UUID;
 
+import org.arakhne.afc.math.continous.object2d.Vector2f;
 import org.jbox2d.collision.shapes.CircleShape;
-import org.jbox2d.collision.shapes.PolygonShape;
-import org.jbox2d.collision.shapes.ShapeType;
-import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
-import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 
+import vi51.util.ConstantContainer;
+
 public class DynamicObject extends EnvironmentObject{
 	
+	private float maxLinearSpeed;
+	private float maxAngularSpeed;
 
-	//Agent créé son corps : on appellera ce constructeur lors de la création de l'agent
-	// P.S : la position x,y sera surement donné par l'agent également
 	/**
-	 * 
+	 * Creation with a polygon (rectangle) shape
 	 * @param x
 	 * @param y
 	 * @param width -> we may delete it
@@ -26,8 +25,9 @@ public class DynamicObject extends EnvironmentObject{
 	 * @param agentId
 	 * @param w
 	 */
-	public DynamicObject(float x, float y,float width,float height,UUID agentId,World w){
-		super(x,y,width,height,agentId);
+	
+	/*public DynamicObject(float x, float y,float width,float height,UUID agentId,World w,EnvMap map){
+		super(width,height,agentId);
 		BodyDef bd = new BodyDef();
 		bd.position.set(x, y);
 		bd.type = BodyType.KINEMATIC; //maybe DYNAMIC type is better
@@ -35,6 +35,8 @@ public class DynamicObject extends EnvironmentObject{
 		PolygonShape ps = new PolygonShape();
 		ps.set(vertices, vertices.length);
 
+
+		
 		FixtureDef fd = new FixtureDef();
 		fd.shape = ps;
 		fd.density = 0.5f;
@@ -66,6 +68,58 @@ public class DynamicObject extends EnvironmentObject{
 					    }   	
 					}
 				}
+	}*/
+	
+	/**
+	 * creation of object with a circle shape
+	 * @param x
+	 * @param y
+	 * @param radius
+	 * @param agentId
+	 * @param w
+	 */
+	public DynamicObject(float x, float y,float radius,UUID agentId,World w,EnvMap map){
+		super(agentId);
+		BodyDef bd = new BodyDef();
+		bd.position.set(x, y);
+		bd.type = BodyType.DYNAMIC; 
+		CircleShape cs = new CircleShape();
+		cs.setRadius(radius); 
+		
+		this.maxLinearSpeed=ConstantContainer.BASIC_MAX_LINEAR_SPEED;
+		this.maxAngularSpeed=ConstantContainer.BASIC_MAX_ANGULAR_SPEED;
+
+		FixtureDef fd = new FixtureDef();
+		fd.shape = cs;
+		fd.density = ConstantContainer.BASIC_DENSITY;
+		fd.friction = ConstantContainer.BASIC_FRICTION;
+		fd.restitution = ConstantContainer.BASIC_RESTITUTION;
+		fd.userData = this; // we store a reference to the object there
+
+		body = w.createBody(bd);
+		body.createFixture(fd);
+
+		this.width=radius*2;
+		this.height=radius*2;
 	}
+	
+	
+	public float getAngle() {
+		return body.getAngle();
+	}
+	public float getMaxLinearSpeed() {
+		return maxLinearSpeed;
+	}
+	public Vector2f getCurrentLinearMotion() {
+		return new Vector2f(body.getLinearVelocity().x,body.getLinearVelocity().y);
+	}
+	public float getMaxAngularSpeed() {
+		return maxAngularSpeed;
+	}
+	public float getCurrentAngularSpeed() {
+		return body.getAngularVelocity();
+	}
+
+	
 
 }

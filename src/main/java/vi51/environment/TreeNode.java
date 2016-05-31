@@ -1,15 +1,17 @@
 package vi51.environment;
 
 import java.util.ArrayList;
-import java.util.Stack;
 
 import org.arakhne.afc.math.continous.object2d.Rectangle2f;
+
+import vi51.util.ConstantContainer;
 
 public class TreeNode {
 
 	private Rectangle2f box;
 	private ArrayList<EnvironmentObject> objects;
 	private TreeNode[] children = null;
+	private TreeNode parent = null;
 	
 
 	TreeNode(Rectangle2f box) {  //Création d'une branche de l'arbre en lui indiquant sa portée (via un rectangle2f)
@@ -22,13 +24,15 @@ public class TreeNode {
 	 * @param o
 	 */
 	public void add(EnvironmentObject o) {
-		if(objects.size()<15 && getChildren()== null){  //15 is an arbitrary max number of object
+		if(objects.size()<ConstantContainer.NB_MAX_OBJECT_IN_NODE && getChildren()== null){  
 			objects.add(o);
+			o.node=this;
 		}else{
 			if(getChildren()==null){
-				setChildren(new TreeNode[4]); //4 is an arbitrary number of child
-				for(int i=0;i<4;i++){
+				setChildren(new TreeNode[ConstantContainer.NB_CHILDREN]);
+				for(int i=0;i<ConstantContainer.NB_CHILDREN;i++){
 					getChildren()[i]=new TreeNode(createChildBox(i));
+					getChildren()[i].parent = this;
 				}
 			}
 			
@@ -51,6 +55,10 @@ public class TreeNode {
 	public void setObjects(ArrayList<EnvironmentObject> objects) {
 		this.objects = objects;
 	}
+	
+	public void removeObject(EnvironmentObject objectToRemove){
+		this.objects.remove(objectToRemove);
+	}
 
 	/**
 	 * should be use only if a child was created
@@ -60,16 +68,18 @@ public class TreeNode {
 		int index=0;
 		int n=0;
 		
-		for(int i=0;i<4;i++){  //TODO define 4 as a parameter
-			if(getChildren()[i].getBox().intersects(e.getBox())){ //TODO bonne utilisation de la fonction intersects 
+		for(int i=0;i<ConstantContainer.NB_CHILDREN;i++){
+			if(getChildren()[i].getBox().intersects(e.getBox())){
 				n++;
 				index=i;
 			}
 		}
 		if(n==1){
-			getChildren()[index].add(e);;
+			getChildren()[index].add(e);
+			e.node=getChildren()[index];
 		}else{
 			objects.add(e);
+			e.node=this;
 		}
 		//TODO need a way to determine where is an object when it's in 2 part of the tree
 		/*for(EnvironmentObject o : objects){
@@ -126,33 +136,21 @@ public class TreeNode {
 		this.children = children;
 	}
 
-	/**
-	 * deprecated : use DepthFirstIterator instead -> better performance
-	 * @param t
-	 */
-	@Deprecated
-	public void/*?*/ depthFirst(RTree t){
-
-		Stack<TreeNode> stack = new Stack<TreeNode>();
-		
-		/*assert(t.getRoot()!=null)*/ //TODO use assert keyword
-		if(t.getRoot()!=null){
-			stack.push(t.getRoot());
-			while(!stack.isEmpty()){ //WARNING non stoppable
-				TreeNode top = stack.pop();
-				for(TreeNode child : top.getChildren()){
-					stack.push(child);
-				} // do something with top
-			}
-		}
-	}
-
 	public boolean hasChild() {
 		if(children==null){
 			return false;
 		}else{
 			return true;
 		}
+	}
+
+	/**
+	 * getter
+	 * @return
+	 */
+	public TreeNode getParent() {
+		
+		return parent;
 	}
 	
 	
