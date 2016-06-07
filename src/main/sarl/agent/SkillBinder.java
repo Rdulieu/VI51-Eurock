@@ -21,10 +21,10 @@
 
 package agent;
 
+import java.util.UUID;
+
 import io.sarl.lang.core.Event;
 import io.sarl.lang.core.EventListener;
-
-import java.util.UUID;
 
 /** Object that may be used to link a skill to a MazeSpace.
  *
@@ -72,7 +72,7 @@ public class SkillBinder implements EventListener {
 	@Override
 	public void receiveEvent(Event event) {
 		if (event instanceof Perception) {
-			Perception perception = (Perception) event;
+			Perception perception = (Perception) event; 
 			this.currentTime = perception.time;
 			//
 			this.owner.receiveEvent(event);

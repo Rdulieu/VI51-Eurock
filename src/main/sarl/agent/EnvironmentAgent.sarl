@@ -5,53 +5,48 @@ import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.lang.core.Address
 import io.sarl.util.Scopes
-import java.util.List
 import java.util.UUID
+import java.util.concurrent.LinkedBlockingDeque
 import vi51.environment.EnvironmentChangeQuery
 import vi51.environment.EnvironmentListener
 import vi51.util.ConstantContainer
+import vi51.util.GenerateCsv
 
 /**
  * @author Olivier
  * 
  */
- 
+
 agent EnvironmentAgent { 
 	
 	uses DefaultContextInteractions, Lifecycle
-	uses MapManager
+	uses MapManager, TimeManager
 	
 	var listeners = <EnvironmentListener>newArrayList
-	var time = 0.0f
-	var Dt = ConstantContainer.DELTA_T
-	val actions = <EnvironmentChangeQuery>newLinkedList
+	val actions = new LinkedBlockingDeque <EnvironmentChangeQuery>
 	var adr : Address
-	var spaceID : UUID
+	var spaceID : UUID  
 	var countInit = 0
 	val agentNumber = ConstantContainer.NB_AGENTS
-	
+	var d : long[] = newLongArrayOfSize(1000)
+	var i : int =0
+
 	on Initialize{
+		
+		setSkill(typeof(TimeManager),new DefaultTimeManager)
 		
 		spaceID = defaultSpace.getID.getID
 		adr=defaultSpace.getAddress(this.ID)
 		
-		//we create the environment *in the skill*
 		setSkill(typeof(MapManager), new DefaultMapManagerSkill(ConstantContainer.MAP_WIDTH,ConstantContainer.MAP_HEIGHT))
 		createMapSurroundings 
 		//we create the objects -> need to link the agents
 		for (var i=0;i<agentNumber;i++) {
-			var body = createUnit(ConstantContainer.BASIC_PERCEPTION_DISTANCE)
-			var agentParameters : List<Object> = newArrayList(spaceID,this.getID/*BehaviorType */)
-			var agentType = AgentTest//AgentBody.AgentType //semantique de l'agent
-			spawnInContextWithID(
-				agentType,
-				body.getId,
-				defaultContext,
-				agentParameters.toArray)
+			spawnAgent(spaceID,this.getID,AgentTest,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
 		}
 		
 		updateWindow //mis a jour de la vue utilisateur
-		//fireEnvironmentChange //utile ?
+		//fireEnvironmentChange
 		
 	}
 	/**
@@ -79,12 +74,13 @@ agent EnvironmentAgent {
 	}
 	
 	on Influence [occurrence.time >= time] {  
+		
 		synchronized(this) {
 			
 			if(occurrence instanceof MotionInfluence){
-				this.actions += new EnvironmentChangeQuery(occurrence.source.getUUID,occurrence.vector,"Motion")
-			}else{
-				this.actions += new EnvironmentChangeQuery(occurrence.source.getUUID,occurrence.vector,"Shoot")
+				this.actions.add(new EnvironmentChangeQuery(occurrence.source.getUUID,occurrence.vector,ConstantContainer.MOTION_TYPE)) 
+			}else if (occurrence instanceof ShootInfluence){
+				this.actions.add(new EnvironmentChangeQuery(occurrence.source.getUUID,occurrence.target,ConstantContainer.SHOOT_TYPE))
 			}
 			
 			if (this.actions.size >= bodyCount) {
@@ -101,9 +97,12 @@ agent EnvironmentAgent {
 		
 
 		synchronized(this){
+
 				this.actions.clear()
 				
-				sendPerceptions(this.time) // Perception computation
+				startTimeCount()
+				
+				sendPerceptions(getTime) // Perception computation
 				
 				//execution de tous les agents
 				//récupération des influences -> processus parallele
@@ -118,33 +117,45 @@ agent EnvironmentAgent {
 	on RunEndOfStep {
 		
 		synchronized(this) {
-			
-			if(SpawnButtonRequest){
-					var body = createUnit(ConstantContainer.BASIC_PERCEPTION_DISTANCE)
-					var agentParameters : List<Object> = newArrayList(spaceID,this.getID/*BehaviorType */)
-					var agentType = AgentTest//AgentBody.AgentType //semantique de l'agent
-					spawnInContextWithID(
-					agentType,
-					body.getId,
-					defaultContext,
-					agentParameters.toArray)
+//			test
+			while(SpawnButtonRequestA){
+				spawnAgent(spaceID,this.getID,AgentTest,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
 			}
+			while(SpawnButtonRequestB){
+				spawnAgent(spaceID,this.getID,AgentTest,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
+			}
+			if(time%10==0){
+				spawnAgent(spaceID,this.getID,AgentTest,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
+				spawnAgent(spaceID,this.getID,AgentTest,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
+			}
+			
+			
 //			var t1 = System.nanoTime()
 			resolveInfluences(actions)
 //			var t2 = System.nanoTime()
 //			var result = t2-t1;
 //			System.out.println("Time to resolve influences : " + result)
-			
+			var t1 = System.nanoTime()			
 			updateTree
-			updateWindow
+			var t2 = System.nanoTime()
+			var result = t2-t1
+			if (i < ConstantContainer.TIME_TO_TEST)
+				this.d.set(i,result)
+			i++
+			if (i == ConstantContainer.TIME_TO_TEST){
+				GenerateCsv.generateCsvFile(d);
+			}
+			updateWindow 
+
 			//printTree //debug
-			time+=Dt
+			TimeStep
+			WaitUntilEndOfStep
 			emit(new RunBeginingOfStep,Scopes::addresses(adr))
 			//var t2 = System.nanoTime()
 		}
 	}
 	
-		
+	
 	def fireGameOver {
 		for (listener : this.listeners) {
 			listener.gameOver()

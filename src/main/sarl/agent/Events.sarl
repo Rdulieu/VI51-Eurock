@@ -17,6 +17,7 @@ event Perception {
 	val pos : Point2f
 	val bodyId : UUID
 	val body : AgentBody
+	
 	new (time : float, bodyID : UUID, objects : ArrayList<Perceivable>, pos : Point2f,body : AgentBody){
 		this.time = time
 		this.bodyId = bodyID
@@ -31,29 +32,33 @@ event Perception {
  */
 event Influence {
 	val time : float
-	val vector : Vector2f
 	
-	new (time : float, vector : Vector2f){
+	new (time : float){
 		this.time = time
-		this.vector = vector
-	}
+	} 
 }
 
 event MotionInfluence extends Influence{ 
-	
-	new (time : float, vector : Vector2f){
-		super(time,vector)
+	val angular : float
+	val vector : Vector2f
+	new (time : float, vector : Vector2f,angular : float){
+		super(time)
+		this.vector = vector
+		this.angular = angular 
 	}
 }
 
 event ShootInfluence extends Influence{
-	
-	new (time : float, vector : Vector2f){
-		super(time,vector)
+	val target : UUID
+	new (time : float,target : UUID){
+		super(time)
+		this.target = target
 	}
 }
 
 event agentReady
+
+event KillAgent
 
 event RunEndOfStep
 

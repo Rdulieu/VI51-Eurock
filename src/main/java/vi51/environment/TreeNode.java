@@ -81,10 +81,6 @@ public class TreeNode {
 			objects.add(e);
 			e.node=this;
 		}
-		//TODO need a way to determine where is an object when it's in 2 part of the tree
-		/*for(EnvironmentObject o : objects){
-			root.add(o);
-		}*/
 		
 	}
 

@@ -2,21 +2,28 @@ package ^agent
 
 import io.sarl.core.Behaviors
 import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Lifecycle
 import io.sarl.lang.core.Address
+import io.sarl.lang.core.Agent
 import io.sarl.util.OpenEventSpace
 import io.sarl.util.Scopes
+import java.util.ArrayList
 import java.util.List
+import java.util.Random
 import java.util.UUID
+import java.util.concurrent.LinkedBlockingDeque
 import org.arakhne.afc.math.continous.object2d.Vector2f
 import org.jbox2d.common.Vec2
 import vi51.environment.AgentBody
 import vi51.environment.Environment
 import vi51.environment.EnvironmentChangeQuery
+import vi51.environment.EnvironmentEvent
 import vi51.environment.EnvironmentObject
 import vi51.environment.RTree
 import vi51.environment.StaticObject
 import vi51.gui.Window
 import vi51.util.AddressUUIDScope
+import vi51.util.ConstantContainer
 
 skill StandardPhysicEnvironment implements PhysicEnvironment { 
 
@@ -32,13 +39,13 @@ skill StandardPhysicEnvironment implements PhysicEnvironment {
 		this.spaceID = spaceID
 	}
 
-	override install { 
+	override install {  
 		do {
 			this.physicSpace = defaultContext.getSpace(this.spaceID) 
 			Thread::yield
 		} while (this.physicSpace == null)
 		this.physicSpace.register(asEventListener)
-		this.myAdr = this.physicSpace.getAddress(owner.ID)  
+		this.myAdr = this.physicSpace.getAddress(owner.ID)   
 	}
 	
 /*	override uninstall() {  
@@ -48,9 +55,15 @@ skill StandardPhysicEnvironment implements PhysicEnvironment {
 		this.physicSpace = null
 	}*/
 	
-	override influenceKinematic(linearInfluence : Vector2f = null, angularInfluence : float = 0f) {
+	override influenceKinematic(linearInfluence : Vector2f = null, angularInfluence : float = 0f,time : float = 0f) {
 		
-		var ^event = new Influence(angularInfluence,linearInfluence)
+		var ^event = new MotionInfluence(time,linearInfluence,angularInfluence)
+		^event.source = this.myAdr
+		this.physicSpace.emit(^event, new AddressUUIDScope(this.environmentID))
+	}
+	
+	override influenceAttack(time : float = 0f, target : UUID = null) {
+		var ^event = new ShootInfluence (time, target)
 		^event.source = this.myAdr
 		this.physicSpace.emit(^event, new AddressUUIDScope(this.environmentID))
 	}
@@ -59,10 +72,11 @@ skill StandardPhysicEnvironment implements PhysicEnvironment {
 
 skill DefaultMapManagerSkill implements MapManager {
 	
-	uses DefaultContextInteractions
+	uses DefaultContextInteractions, Lifecycle
 	
 	val width : float
 	val height : float
+	val random : Random = new Random()
 	
 	var environment : Environment
 	var GUI : Window
@@ -77,20 +91,30 @@ skill DefaultMapManagerSkill implements MapManager {
 		this.environment = new Environment(this.width,this.height)
 		GUI = new Window(this.environment)
 	}
-	
+	 
 	override getBodyCount : int {
 		/** create a method to get size of the objectlist */
 		 return this.environment.world.getBodyCount()
 	}
 	
-	override resolveInfluences(actions : List<EnvironmentChangeQuery>) : boolean {
-		
-		for( change : actions){
-			var body = getAgentBody(change.getEmitter).getBody()
-			var velocity = change.getVelocity
-			var force = new Vec2(velocity.getX(),velocity.getY())
-			body.setLinearVelocity(force)
-			//print("test")
+	override resolveInfluences(actions : LinkedBlockingDeque<EnvironmentChangeQuery>) : boolean {
+		while (actions.size() != 0){
+			var change = actions.take()
+			if(change.influenceType.equals(ConstantContainer.MOTION_TYPE)){
+				if(getAgentBody(change.getEmitter) != null){
+					var body = getAgentBody(change.getEmitter).getBody()
+					var velocity = change.getVelocity
+					var force = new Vec2(velocity.getX(),velocity.getY())
+					body.setLinearVelocity(force)
+				}
+			}else if(change.influenceType.equals(ConstantContainer.SHOOT_TYPE)){
+				if(getAgentBody(change.getEmitter) != null && getAgentBody(change.getTarget) != null){
+					var body = getAgentBody(change.getEmitter)
+					var target = getAgentBody(change.getTarget)
+					target.takeDamage()
+					body.getBody.setLinearVelocity(new Vec2(0,0))
+				}
+			}	
 		}
 		
 		RunJbox // 1 step of simulation	
@@ -107,11 +131,12 @@ skill DefaultMapManagerSkill implements MapManager {
 			
 			
 			var percevaibles = newArrayList
-			percevaibles = body.computePerception
 			var pos = body.position
 			
+			percevaibles = body.computePerception
+			
 			var perceptionEvent = new Perception(time,body.getId,percevaibles,pos,body)
-//			System.out.printf("\nPerception de l'UUID : "+body.getAgentId()+"\ntime: "+time+" position: " +pos);
+//			System.out.printf("\nPerception de l'UUID : "+body.getId()+"\ntime: "+time+" position: " +pos);
 //			System.out.printf("\nPercevaibles :\n");
 //			for(per : percevaibles){
 //				System.out.printf("object : "+per+"\n")
@@ -137,41 +162,61 @@ skill DefaultMapManagerSkill implements MapManager {
 	}
 	
 	override getAgentBody(id : UUID) : AgentBody {
-		// TODO Auto-generated action.
+		
 		this.environment.world.getAgentBody(id)
 	}
-	
-	override createUnit(perceptionDistance : float) : AgentBody {
-		// TODO Auto-generated action.
-		this.environment.world.createBody(typeof(AgentBody),null,this.environment.getjBoxWorld(),perceptionDistance)
+
+	override createUnit(perceptionDistance : float, team : int) : AgentBody {
+		var x : int
+		var y : int
+		if (team == 1 ){
+			x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_X)
+			y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_Y)
+			while (!environment.world.canMoveInside(x, y)) {
+				x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_X)
+				y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_Y)
+			}
+		} else {
+			x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_X)
+			y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_Y)
+			x+=110
+			y+=110
+			while (!environment.world.canMoveInside(x, y)) {
+				x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_X)
+				y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_Y)
+				x+=110
+				y+=110
+			}
+			
+		}
+		return this.environment.world.createBody(typeof(AgentBody),x,y,null,team,this.environment.getjBoxWorld(),perceptionDistance)
 	
 	}
 	
 	override createMapSurroundings {
 		var id : UUID
 		id = UUID.randomUUID()
-		var objects = <EnvironmentObject>newArrayList(new StaticObject(10,100,20,200,id,environment.getjBoxWorld,environment.getWorld()))
+		var objects = <EnvironmentObject>newArrayList(new StaticObject(10,100,10,200,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
 		objects.add(new StaticObject(100,5,200,10,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(190,100,40,200,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(170,100,20,200,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
 		objects.add(new StaticObject(100,180,200,40,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(20,86,40,20,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(20,72,40,10,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(80,10,10,30,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(80,15,10,20,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
 		objects.add(new StaticObject(170,90,50,10,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(95,170,10,60,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(105,170,12,60,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
 		objects.add(new StaticObject(93,73,6,6,id,environment.getjBoxWorld,environment.getWorld()))
 		this.environment.addObjectToWorld(objects)
 	}
 	
 	override RunJbox {
-		
 		this.environment.runJBox()
 	}
 	
@@ -185,15 +230,86 @@ skill DefaultMapManagerSkill implements MapManager {
 	}
 	 
 	override updateTree {
-		this.environment.updateTree()
+		var agentToKill : ArrayList<UUID> = new ArrayList<UUID>()
+		this.environment.updateTree(agentToKill)
+		for(id : agentToKill){
+			var adr=defaultSpace.getAddress(id)
+			emit(new KillAgent,Scopes::addresses(adr))
+			this.environment.getjBoxWorld.destroyBody(getAgentBody(id).getBody)
+			this.environment.world.removeBody(id)
+		}
 	}
 	
-	override SpawnButtonRequest : boolean {
-			if (!this.environment.getEventFire().isEmpty()){
-				this.environment.getEventFire().poll()
-				return true;
-			}
-			return false;	
+	override spawnAgent (spaceID : UUID, environmentID : UUID,agentType : Class<? extends Agent>,perceptionDistance : float,team : int) : UUID {
+			var body = createUnit(perceptionDistance,team)
+			var agentParameters : List<Object> = newArrayList(spaceID,environmentID)
+			spawnInContextWithID(
+			agentType,
+			body.getId,
+			defaultContext,
+			agentParameters.toArray)
+	}
+	
+	
+	override SpawnButtonRequestA : boolean {
+		if (!this.environment.getEventFire().isEmpty()){
+ 			if (this.environment.getEventFire().element().getUpdateAction.equals("SpawnA")){
+ 				this.environment.getEventFire().take()
+ 				return true
+ 			}
+ 			return false
+ 		}
+ 		return false
+	}
+	override SpawnButtonRequestB : boolean {
+		if (!this.environment.getEventFire().isEmpty()){
+ 			if (this.environment.getEventFire().element().getUpdateAction.equals("SpawnB")){
+ 				this.environment.getEventFire().take()
+ 				return true
+ 			}
+ 			return false
+ 		}
+ 		return false
+	}
+	
+	override test {
+		if (this.environment.getEventFire().isEmpty()){
+			this.environment.fireEnvironmentChanged(new EnvironmentEvent ("button","SpawnA"))
+		}
+	}
+	
+}
+
+skill DefaultTimeManager implements TimeManager{
+	var time = 0.0f
+	var Dt = ConstantContainer.DELTA_T
+	var beginTime : long		// the time when the cycle begun
+    var timeDiff : long		// the time it took for the cycle to execute
+    var sleepTime : long	// ms to sleep (<0 if we're behind)
+	
+	override startTimeCount{
+		beginTime = System.currentTimeMillis()	
+	}
+	
+	override TimeStep {
+		time+=Dt;
+	}
+	
+	override WaitUntilEndOfStep {
+		timeDiff = System.currentTimeMillis() - beginTime
+            sleepTime = ConstantContainer.FRAME_PERIOD - timeDiff
+
+            if (sleepTime > 0) {
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (e : InterruptedException ) {}
+            }else{
+            	//retard
+            }
+	}
+	
+	override getTime : float {
+		time
 	}
 	
 }

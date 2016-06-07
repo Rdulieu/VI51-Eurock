@@ -1,13 +1,11 @@
 package ^agent
 
-import java.util.ArrayList
-import java.util.List
+import io.sarl.lang.core.Agent
 import java.util.UUID
-import org.arakhne.afc.math.continous.object2d.Point2f
+import java.util.concurrent.LinkedBlockingDeque
 import org.arakhne.afc.math.continous.object2d.Vector2f
 import vi51.environment.AgentBody
 import vi51.environment.EnvironmentChangeQuery
-import vi51.environment.Perceivable
 import vi51.environment.RTree
 
 /**
@@ -22,7 +20,7 @@ capacity MapManager {
 	
 	/** execute the list of influences 
 	 * 	@return true if game is over? *TBD* */
-	def resolveInfluences (actions : List<EnvironmentChangeQuery>) : boolean
+	def resolveInfluences (actions : LinkedBlockingDeque<EnvironmentChangeQuery>) : boolean
 	
 	/** replies the perceptions */
 	def sendPerceptions (time : float)
@@ -40,7 +38,9 @@ capacity MapManager {
 	def getAgentBody(id : UUID) : AgentBody
 	
 	/** Create basic Unit */
-	def createUnit(perceptionDistance : float) : AgentBody
+	def createUnit(perceptionDistance : float, team : int) : AgentBody
+	
+	def spawnAgent (spaceID : UUID, environmentID : UUID,agentType : Class<? extends Agent>,perceptionDistance : float,team : int) : UUID
 	
 	/** Create the map surroundings walls */
 	def createMapSurroundings
@@ -49,20 +49,22 @@ capacity MapManager {
 	
 	def RunJbox
 	
+	def printTree
+	
+	// GUI related
 	def updateWindow
 	
-	def printTree
-
-	def SpawnButtonRequest : boolean
+	def SpawnButtonRequestA : boolean
+	
+	def SpawnButtonRequestB : boolean
+	
+	def test
 	
 }
 
-
-capacity EndOfTurn {
-	def sendPerception(time : float, bodyID : UUID, objects : ArrayList<Perceivable>,position : Point2f)
-	
-}
-
+/**
+ * capacity that agent uses to send influence
+ */
 capacity PhysicEnvironment {
 	
 	/** Invoked to send the influence to the environment.
@@ -70,6 +72,21 @@ capacity PhysicEnvironment {
 	 * @param linearInfluence is the linear influence to apply on the object.
 	 * @param angularInfluence is the angular influence to apply on the object.
 	 */
-	def influenceKinematic(linearInfluence : Vector2f = null, angularInfluence : float = 0f)
+	def influenceKinematic(linearInfluence : Vector2f = null, angularInfluence : float = 0f,time : float = 0f)
 	
+	def influenceAttack (time : float = 0f,target : UUID = null)
+}
+
+capacity TimeManager{
+	/**
+	 * manage the time
+	 */
+	
+	def startTimeCount
+
+	def TimeStep
+	
+	def WaitUntilEndOfStep
+	
+	def getTime : float
 }

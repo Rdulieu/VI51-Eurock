@@ -1,6 +1,3 @@
-/**
- * 
- */
 package Behaviour
 
 import org.arakhne.afc.math.MathUtil
@@ -18,7 +15,7 @@ class KinematicSeekBehaviour implements SeekBehaviour{
 	val v = new Vector2f()
 	v.sub(target,position)
 	v.normalize()
-	v.scale(linearSpeed)
+	v.scale(maxLinear)
 	// orientation ?
 	
 	return new BehaviourOutput() => [

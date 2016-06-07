@@ -8,14 +8,14 @@ import org.arakhne.afc.math.continous.object2d.Vector2f
 import vi51.environment.Perceivable
 
 agent AbstractAnimat {
-	
+
 	uses PhysicEnvironment, Lifecycle 
 
 	on Initialize {
 		var physicSkill = new StandardPhysicEnvironment(
 			occurrence.parameters.get(0) as UUID,
 			occurrence.parameters.get(1) as UUID)
-		setSkill(PhysicEnvironment, physicSkill)   
+		setSkill(PhysicEnvironment, physicSkill)    
 	}
 	
 	def getMaxLinear(p : Perceivable) : float {
@@ -26,9 +26,9 @@ agent AbstractAnimat {
 		p.maxAngularSpeed
 	}
 
-	def emitInfluence(output : BehaviourOutput) {
+	def emitInfluence(output : BehaviourOutput,time : float) {
 		if (output !== null) {
-				influenceKinematic(output.linear, output.angular);
+				influenceKinematic(output.linear, output.angular,time);
 		}
 	}
 	
@@ -39,5 +39,8 @@ agent AbstractAnimat {
 	on EndOfGame {
 		killMe
 	}
-
+	
+	on KillAgent{
+		killMe
+	}
 }

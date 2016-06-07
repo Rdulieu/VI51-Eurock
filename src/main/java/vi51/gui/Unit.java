@@ -11,23 +11,18 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import org.arakhne.afc.math.continous.object2d.Point2f;
-import org.arakhne.afc.math.continous.object2d.Rectangle2f;
 
 import vi51.environment.AgentBody;
 
 public class Unit {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	protected Rectangle2f box;
 	protected UUID id;
+	protected int team;
 	protected Point2f position;
 	
 	public Unit(AgentBody a){
 		position = a.getPosition();
-		box = a.getBox();
+		team = a.getTeam();
 		id = a.getId();
 		
 	}
@@ -42,10 +37,17 @@ public class Unit {
 		try
 		{
 			// Resources dans AFC vmutils
-			URL url = getClass().getClassLoader().getResource("images/unit.png");
+			URL url;
+			if (this.team == 1){
+				url = getClass().getClassLoader().getResource("images/unit.png");
+			} else {
+				url = getClass().getClassLoader().getResource("images/unit2.png");
+			}
 	    	assert (url != null);
 			Image img = ImageIO.read(url);
-			g2d.drawImage(img, (int) position.getX() * 5, (int) position.getY() * 5, container);
+			float posX = position.getX() * 5;
+			float posY = position.getY() * 5;
+			g2d.drawImage(img, (int) posX, (int) posY, container);
 		}
 		catch (IOException e)
 		{
