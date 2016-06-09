@@ -18,6 +18,7 @@ public class ConstantContainer {
 	public static final int BASIC_MUSIC_DESIRE=100;
 	public static final int BASIC_THIRSTY=50;
 	public static final int BASIC_HUNGRY=50;
+	public static final int BASIC_PEE=10;
 	
 	//Influence related
 	public static final String MOTION_TYPE="MOTION";

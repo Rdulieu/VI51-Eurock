@@ -6,8 +6,10 @@ import Behaviour.SeekBehaviour
 import Behaviour.WanderBehaviour
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
+import java.util.HashMap
 import org.arakhne.afc.math.continous.object2d.Point2f
 import vi51.util.ConstantContainer
+import vi51.util.Variation
 
 /**
  * @author Dudul
@@ -23,9 +25,12 @@ agent Visitor extends AbstractAnimat {
 	var listenMusic = ConstantContainer.BASIC_MUSIC_DESIRE
 	var drink = ConstantContainer.BASIC_THIRSTY
 	var hungry = ConstantContainer.BASIC_HUNGRY
+	var pee = ConstantContainer.BASIC_PEE
+	
+	var actionMapping : HashMap<String,Variation>
 	  
 	on Initialize{
-		super._handle_Initialize_0(occurrence) 
+		super._handle_Initialize_0(occurrence)
 	}
 	
 	on Perception{
