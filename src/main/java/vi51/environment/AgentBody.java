@@ -8,6 +8,7 @@ import org.arakhne.afc.math.continous.object2d.Rectangle2f;
 import org.jbox2d.dynamics.World;
 
 import vi51.util.ConstantContainer;
+import vi51.util.Semantic;
 
 // A mettre abstract une fois différentes unités créées et passer ces unités en constructeur de createBody()
 public class AgentBody extends DynamicObject implements Comparable<AgentBody>{
@@ -15,9 +16,7 @@ public class AgentBody extends DynamicObject implements Comparable<AgentBody>{
 	private float perceptionDistance; 
 	private int life;
 	private int team;
-	private int damagePerStep;
-	//private final enum agentType; semantic
-	
+	private int damagePerStep;	
 
 
 	public AgentBody (float x, float y,float radius,int team,UUID agentId,World w,EnvMap map, float perceptionDistance) {
@@ -41,6 +40,18 @@ public class AgentBody extends DynamicObject implements Comparable<AgentBody>{
 
 	public float getPerceptionDistance() {
 		return perceptionDistance;
+	}
+	
+	public void SetAsVisitor(){
+		this.semantic=Semantic.Visitor;
+	}
+	
+	public void SetAsBodyGuard(){
+		this.semantic=Semantic.BodyGuard;
+	}
+	
+	public void SetAsTerrorist(){
+		this.semantic=Semantic.Terrorist;
 	}
 	
 	/**

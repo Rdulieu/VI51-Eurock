@@ -1,0 +1,30 @@
+package ^agent
+
+import Behaviour.KinematicWanderBehaviour
+import Behaviour.SeekBehaviour
+import Behaviour.WanderBehaviour
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import java.util.UUID
+
+/**
+ * @author Dudul
+ *
+ */
+agent Terrorist extends AbstractAnimat {
+
+	uses  Lifecycle
+	
+	var seekBehaviour : SeekBehaviour
+	var wanderBehaviour : WanderBehaviour  
+	  
+	on Initialize{
+		super._handle_Initialize_0(occurrence) 
+	}
+	
+	on Perception{
+		
+		
+		
+	}
+}

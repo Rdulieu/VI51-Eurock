@@ -1,22 +1,28 @@
 package ^agent
 
+import Behaviour.KinematicSeekBehaviour
 import Behaviour.KinematicWanderBehaviour
 import Behaviour.SeekBehaviour
 import Behaviour.WanderBehaviour
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
-import java.util.UUID
+import org.arakhne.afc.math.continous.object2d.Point2f
+import vi51.util.ConstantContainer
 
 /**
  * @author Dudul
  *
  */
-agent AgentTest extends AbstractAnimat {
+agent Visitor extends AbstractAnimat {
 
 	uses  Lifecycle
 	
 	var seekBehaviour : SeekBehaviour
-	var wanderBehaviour : WanderBehaviour  
+	var wanderBehaviour : WanderBehaviour
+	
+	var listenMusic = ConstantContainer.BASIC_MUSIC_DESIRE
+	var drink = ConstantContainer.BASIC_THIRSTY
+	var hungry = ConstantContainer.BASIC_HUNGRY
 	  
 	on Initialize{
 		super._handle_Initialize_0(occurrence) 
@@ -24,15 +30,22 @@ agent AgentTest extends AbstractAnimat {
 	
 	on Perception{
 		var body = occurrence.body
-		var targetID : UUID = null
+		var target : Point2f = null
 		if(occurrence.objects.size()>0){
 			for (object : occurrence.objects){
-				if (object.getTeam() != body.getTeam() && object.getTeam() != 0){
-					targetID = object.getBodyId()
+				if (object.getName.equals("Scene1")){
+					target = object.getPosition()
 				}
 			}
-			if(targetID!=null){
-				influenceAttack(occurrence.time,targetID)
+			if(target!=null){
+				this.seekBehaviour = new KinematicSeekBehaviour
+				var o = this.seekBehaviour.runSeek(
+					body.position,
+					body.currentLinearMotion.length,
+					body.maxLinearSpeed,
+					target
+				)
+				o.emitInfluence(occurrence.time)
 			}else{
 				this.wanderBehaviour = new KinematicWanderBehaviour
 				//position : Point2f, orientation : Vector2f, linearSpeed : float, maxLinear : float, angularSpeed : float, maxAngular : float

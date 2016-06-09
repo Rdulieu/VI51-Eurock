@@ -8,12 +8,16 @@ public class ConstantContainer {
 	//Agent or Body Related
 	public static final int NB_AGENTS = 1;
 	
-	public static final float BASIC_PERCEPTION_DISTANCE=10f;
+	public static final float BASIC_PERCEPTION_DISTANCE=30f;
 	public static final float BASIC_MAX_LINEAR_SPEED=1f;
 	public static final float BASIC_MAX_ANGULAR_SPEED=1f;
 	public static final float BASIC_RADIUS=2;
 	public static final int BASIC_LIFE = 100;
 	public static final int BASIC_DAMAGE= 10;
+	
+	public static final int BASIC_MUSIC_DESIRE=100;
+	public static final int BASIC_THIRSTY=50;
+	public static final int BASIC_HUNGRY=50;
 	
 	//Influence related
 	public static final String MOTION_TYPE="MOTION";
@@ -45,7 +49,7 @@ public class ConstantContainer {
 	//TREE Related
 	public static final int NB_MAX_OBJECT_IN_NODE = 10;
 	public static final int NB_CHILDREN = 4;
-	public static final int MAX_FPS = 15;
+	public static final int MAX_FPS = 20;
 	public static final int FRAME_PERIOD = 1000/MAX_FPS;
 	
 	//GUI Related

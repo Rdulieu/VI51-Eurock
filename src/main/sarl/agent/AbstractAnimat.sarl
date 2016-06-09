@@ -6,16 +6,19 @@ import io.sarl.core.Lifecycle
 import java.util.UUID
 import org.arakhne.afc.math.continous.object2d.Vector2f
 import vi51.environment.Perceivable
+import io.sarl.core.DefaultContextInteractions
 
 agent AbstractAnimat {
 
-	uses PhysicEnvironment, Lifecycle 
+	uses PhysicEnvironment, Lifecycle , DefaultContextInteractions
 
 	on Initialize {
 		var physicSkill = new StandardPhysicEnvironment(
 			occurrence.parameters.get(0) as UUID,
 			occurrence.parameters.get(1) as UUID)
-		setSkill(PhysicEnvironment, physicSkill)    
+		setSkill(PhysicEnvironment, physicSkill)
+		//print("Agent Spawn\n")
+		emit(new agentReady)  
 	}
 	
 	def getMaxLinear(p : Perceivable) : float {

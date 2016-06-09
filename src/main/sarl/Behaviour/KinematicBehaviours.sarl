@@ -16,7 +16,6 @@ class KinematicSeekBehaviour implements SeekBehaviour{
 	v.sub(target,position)
 	v.normalize()
 	v.scale(maxLinear)
-	// orientation ?
 	
 	return new BehaviourOutput() => [
 		linear = v

@@ -1,0 +1,46 @@
+package ^agent
+
+import Behaviour.KinematicWanderBehaviour
+import Behaviour.SeekBehaviour
+import Behaviour.WanderBehaviour
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import java.util.UUID
+
+/**
+ * @author Dudul
+ *
+ */
+agent BodyGuard extends AbstractAnimat {
+
+	uses  Lifecycle
+	
+	var seekBehaviour : SeekBehaviour
+	var wanderBehaviour : WanderBehaviour  
+	  
+	on Initialize{
+		super._handle_Initialize_0(occurrence) 
+
+	}
+	
+	on Perception{
+		var body = occurrence.body
+		var targetID : UUID = null
+		if(occurrence.objects.size()>0){
+			for (object : occurrence.objects){
+				if (object.getTeam() != body.getTeam() && object.getTeam() != 0){
+					targetID = object.getBodyId()
+				}
+			}
+			if(targetID!=null){
+				influenceAttack(occurrence.time,targetID)
+			}else{
+				doNothing
+			}
+		
+		}else{
+			doNothing
+		}
+	}
+		
+}

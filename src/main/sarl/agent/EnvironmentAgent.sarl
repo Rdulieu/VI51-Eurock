@@ -10,7 +10,6 @@ import java.util.concurrent.LinkedBlockingDeque
 import vi51.environment.EnvironmentChangeQuery
 import vi51.environment.EnvironmentListener
 import vi51.util.ConstantContainer
-import vi51.util.GenerateCsv
 
 /**
  * @author Olivier
@@ -19,7 +18,7 @@ import vi51.util.GenerateCsv
 
 agent EnvironmentAgent { 
 	
-	uses DefaultContextInteractions, Lifecycle
+	uses DefaultContextInteractions
 	uses MapManager, TimeManager
 	
 	var listeners = <EnvironmentListener>newArrayList
@@ -28,8 +27,6 @@ agent EnvironmentAgent {
 	var spaceID : UUID  
 	var countInit = 0
 	val agentNumber = ConstantContainer.NB_AGENTS
-	var d : long[] = newLongArrayOfSize(1000)
-	var i : int =0
 
 	on Initialize{
 		
@@ -42,25 +39,12 @@ agent EnvironmentAgent {
 		createMapSurroundings 
 		//we create the objects -> need to link the agents
 		for (var i=0;i<agentNumber;i++) {
-			spawnAgent(spaceID,this.getID,AgentTest,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
+			spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
+			spawnAgent(spaceID,this.getID,BodyGuard,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
 		}
 		
 		updateWindow //mis a jour de la vue utilisateur
-		//fireEnvironmentChange
 		
-	}
-	/**
-	 * make a copy of the environment and send it to the GUI + wake up all listeners
-	 */
-	def fireEnvironmentChange {
-		/*var objects = new TreeMap<Point,EnvironmentObject>
-		for (obj : getEnvironmentObjects) {
-				objects.put(obj.position,obj)
-		}
-		var ^event = new EnvironmentEvent (ID, this.time, mapWidth, mapHeight, Collections::unmodifiableMap(objects))
-		for (listener : this.listeners) {
-			listener.EnvironmentChanged(^event)
-		}*/
 	}
 	
 	on agentReady {
@@ -73,7 +57,7 @@ agent EnvironmentAgent {
 		}
 	}
 	
-	on Influence [occurrence.time >= time] {  
+	on Influence [occurrence.time >= time] { 
 		
 		synchronized(this) {
 			
@@ -104,8 +88,6 @@ agent EnvironmentAgent {
 				
 				sendPerceptions(getTime) // Perception computation
 				
-				//execution de tous les agents
-				//récupération des influences -> processus parallele
 			
 		}
 	}
@@ -117,41 +99,27 @@ agent EnvironmentAgent {
 	on RunEndOfStep {
 		
 		synchronized(this) {
-//			test
+
 			while(SpawnButtonRequestA){
-				spawnAgent(spaceID,this.getID,AgentTest,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
+				spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
 			}
 			while(SpawnButtonRequestB){
 				spawnAgent(spaceID,this.getID,AgentTest,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
 			}
 			if(time%10==0){
-				spawnAgent(spaceID,this.getID,AgentTest,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
-				spawnAgent(spaceID,this.getID,AgentTest,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
+				spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
+				spawnAgent(spaceID,this.getID,BodyGuard,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
 			}
 			
-			
-//			var t1 = System.nanoTime()
-			resolveInfluences(actions)
-//			var t2 = System.nanoTime()
-//			var result = t2-t1;
-//			System.out.println("Time to resolve influences : " + result)
-			var t1 = System.nanoTime()			
+
+			resolveInfluences(actions)		
 			updateTree
-			var t2 = System.nanoTime()
-			var result = t2-t1
-			if (i < ConstantContainer.TIME_TO_TEST)
-				this.d.set(i,result)
-			i++
-			if (i == ConstantContainer.TIME_TO_TEST){
-				GenerateCsv.generateCsvFile(d);
-			}
+
 			updateWindow 
 
-			//printTree //debug
 			TimeStep
 			WaitUntilEndOfStep
 			emit(new RunBeginingOfStep,Scopes::addresses(adr))
-			//var t2 = System.nanoTime()
 		}
 	}
 	

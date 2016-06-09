@@ -197,8 +197,12 @@ skill DefaultMapManagerSkill implements MapManager {
 		var id : UUID
 		id = UUID.randomUUID()
 		var objects = <EnvironmentObject>newArrayList(new StaticObject(10,100,10,200,id,environment.getjBoxWorld,environment.getWorld()))
+		var temp = objects.get(0)
+		if(temp instanceof StaticObject)temp.setAsScene("Scene1")
 		id = UUID.randomUUID()
 		objects.add(new StaticObject(100,5,200,10,id,environment.getjBoxWorld,environment.getWorld()))
+		temp = objects.get(1)
+		if(temp instanceof StaticObject)temp.setAsScene("Scene2")
 		id = UUID.randomUUID()
 		objects.add(new StaticObject(170,100,20,200,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()

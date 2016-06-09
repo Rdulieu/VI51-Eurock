@@ -8,40 +8,23 @@ import org.arakhne.afc.math.continous.object2d.Vector2f;
 
 import com.google.common.base.Objects;
 
+import vi51.util.Semantic;
+
 
 public final class Perceivable {
 	
 	private final UUID bodyId;
 	private final UUID objectId;
 	private int team = 0;
-	public UUID getBodyId() {
-		return bodyId;
-	}
-
-
-	public UUID getObjectId() {
-		return objectId;
-	}
-
-
-	public int getTeam() {
-		return team;
-	}
-
-
-	public Rectangle2f getBox() {
-		return box;
-	}
-
 	private Rectangle2f box;
 	private Point2f position;
 	private final float angle;
-	//private final enum type;
+	private final Semantic type;
 	private final float maxLinearSpeed;
 	private Vector2f currentLinearMotion;
 	private final float maxAngularSpeed;
 	private final float currentAngularSpeed;
-	//private final String name;
+	private final String name;
 	
 	
 	/**
@@ -50,16 +33,10 @@ public final class Perceivable {
 	public Perceivable(EnvironmentObject perceivedObject) {
 		
 		this.objectId = perceivedObject.getId();
-		//this.name = perceivedObject.getName();
+		this.name = perceivedObject.getName();
 		this.box = perceivedObject.getBox();
 		this.position = perceivedObject.getPosition().clone();
-		/*if (type == null) {
-			type = perceivedObject.getType();
-			if (type == null) {
-				type = perceivedObject.getClass().getName();
-			}
-		}
-		this.type = type;*/
+		this.type = perceivedObject.getSemantic();
 		if (perceivedObject instanceof AgentBody) {
 			AgentBody Aobj = (AgentBody) perceivedObject;
 			this.team = Aobj.getTeam();
@@ -142,6 +119,24 @@ public final class Perceivable {
 		return this.objectId;
 	}
 
+	public UUID getBodyId() {
+		return bodyId;
+	}
+
+
+	public UUID getObjectId() {
+		return objectId;
+	}
+
+
+	public int getTeam() {
+		return team;
+	}
+
+
+	public Rectangle2f getBox() {
+		return box;
+	}
 	
 	public Rectangle2f getShape() {
 		return this.box;
@@ -216,7 +211,17 @@ public final class Perceivable {
 	@Override	
 	public String toString(){
 		
-		return "UUID : " + this.bodyId + "   Position : (" + getPosition().getX() + "," + getPosition().getY() + ")";
+		return "UUID : " + this.bodyId + " Name : " + this.name + " Position : (" + getPosition().getX() + "," + getPosition().getY() + ")";
 		
+	}
+
+
+	public Semantic getType() {
+		return type;
+	}
+
+
+	public String getName() {
+		return name;
 	}
 }
