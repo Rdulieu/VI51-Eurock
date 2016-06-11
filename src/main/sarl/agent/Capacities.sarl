@@ -7,6 +7,8 @@ import org.arakhne.afc.math.continous.object2d.Vector2f
 import vi51.environment.AgentBody
 import vi51.environment.EnvironmentChangeQuery
 import vi51.environment.RTree
+import vi51.util.Variation
+import vi51.util.Actions
 
 /**
  * @author Olivier
@@ -89,4 +91,17 @@ capacity TimeManager{
 	def WaitUntilEndOfStep
 	
 	def getTime : float
+}
+
+capacity DesireManager{
+	/**
+	 * manage the desire of an agent
+	 */
+	 def addVariation(v : Variation) : Variation
+	 
+	 def applyVariation(a : Actions)
+	 
+	 def chooseBestBasedOnAverageValue : Actions
+	 
+	 def computeAverageValue(values : Variation) : int
 }

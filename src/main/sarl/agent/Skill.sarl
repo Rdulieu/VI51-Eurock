@@ -24,6 +24,11 @@ import vi51.environment.StaticObject
 import vi51.gui.Window
 import vi51.util.AddressUUIDScope
 import vi51.util.ConstantContainer
+import vi51.util.Actions
+import vi51.util.Variation
+import vi51.util.Variation
+import vi51.util.Actions
+import java.util.HashMap
 
 skill StandardPhysicEnvironment implements PhysicEnvironment { 
 
@@ -196,8 +201,8 @@ skill DefaultMapManagerSkill implements MapManager {
 	override createMapSurroundings {
 		var id : UUID
 		id = UUID.randomUUID()
-		var objects = <EnvironmentObject>newArrayList(new StaticObject(10,100,10,200,id,environment.getjBoxWorld,environment.getWorld()))
-		var temp = objects.get(0)
+		var objects = <EnvironmentObject>newArrayList(/*new StaticObject(10,100,10,200,id,environment.getjBoxWorld,environment.getWorld())*/)
+		/*var temp = objects.get(0)
 		if(temp instanceof StaticObject)temp.setAsScene("Scene1")
 		id = UUID.randomUUID()
 		objects.add(new StaticObject(100,5,200,10,id,environment.getjBoxWorld,environment.getWorld()))
@@ -205,18 +210,28 @@ skill DefaultMapManagerSkill implements MapManager {
 		if(temp instanceof StaticObject)temp.setAsScene("Scene2")
 		id = UUID.randomUUID()
 		objects.add(new StaticObject(170,100,20,200,id,environment.getjBoxWorld,environment.getWorld()))
+		id = UUID.randomUUID()*/
+		objects.add(new StaticObject(32,152,64,96,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(100,180,200,40,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(7,52,14,104,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(20,72,40,10,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(42,168,84,64,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(80,15,10,20,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(77,190,154,20,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(170,90,50,10,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(167,72,66,144,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(105,170,12,60,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(155,48,90,96,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(93,73,6,6,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(100,18,200,36,id,environment.getjBoxWorld,environment.getWorld()))
+		/*id = UUID.randomUUID()
+		objects.add(new StaticObject(1,100,2,200,id,environment.getjBoxWorld,environment.getWorld()))
+		id = UUID.randomUUID()
+		objects.add(new StaticObject(100,1,200,2,id,environment.getjBoxWorld,environment.getWorld()))
+		id = UUID.randomUUID()
+		objects.add(new StaticObject(199,100,2,200,id,environment.getjBoxWorld,environment.getWorld()))
+		id = UUID.randomUUID()
+		objects.add(new StaticObject(100,199,200,2,id,environment.getjBoxWorld,environment.getWorld()))*/
 		this.environment.addObjectToWorld(objects)
 	}
 	
@@ -314,6 +329,82 @@ skill DefaultTimeManager implements TimeManager{
 	
 	override getTime : float {
 		time
+	}
+	
+}
+
+skill VisitorDesire implements DesireManager{
+	
+	var currentDesire : Variation
+	var	 actionMapping : HashMap<Actions, Variation>
+	
+	/**
+	 * start value for the desires of a visitor in parameter (between 0 and 100)
+	 */
+	new(music : int,thirsty : int,hungry : int,pee : int){
+		this.currentDesire = new Variation(music,thirsty,hungry,pee)
+		
+		actionMapping = new HashMap<Actions,Variation>();
+		actionMapping.put(Actions.Drink,new Variation(10,-40,20,30));
+		actionMapping.put(Actions.ListenMusic,new Variation(-1,1,1,1));
+		actionMapping.put(Actions.Eat,new Variation(10,20,-40,10));
+		actionMapping.put(Actions.Pee,new Variation(10,1,1,-50));
+		actionMapping.put(Actions.Move,new Variation(1,0,0,1));
+	}
+	
+	/**
+	 * return a new variation that is the sum of all values
+	 * @param var
+	 * @return
+	 */
+	override addVariation(v : Variation) : Variation {
+		
+		return new Variation(currentDesire.music+v.music,currentDesire.thirsty+v.thirsty,currentDesire.hungry+v.hungry,currentDesire.pee+v.pee)
+
+	}
+	
+	override applyVariation(actionToApply : Actions) {
+		
+		var change = actionMapping.get(actionToApply);
+		currentDesire.music=change.music;
+		currentDesire.hungry=change.hungry;
+		currentDesire.thirsty=change.thirsty;
+		currentDesire.pee=change.pee;
+	}
+	
+	/**
+	 * java code for now
+	 */
+	override chooseBestBasedOnAverageValue : Actions {
+		
+		var action = Actions.Move;
+		var bestAverage = currentDesire.computeAverageValue
+		var newAverage = this.addVariation(actionMapping.get(Actions.Drink)).computeAverageValue
+		if(newAverage<bestAverage){
+			action = Actions.Drink;
+			bestAverage = newAverage;
+		}
+		newAverage = this.addVariation(actionMapping.get(Actions.Eat)).computeAverageValue;
+		if(newAverage<bestAverage){
+			action = Actions.Eat;
+			bestAverage = newAverage;
+		}
+		newAverage = this.addVariation(actionMapping.get(Actions.Pee)).computeAverageValue;
+		if(newAverage<bestAverage){
+			action = Actions.Pee;
+			bestAverage = newAverage;
+		}
+		
+		return action;
+		
+	
+	}
+	
+	/**
+	 * 
+	 */
+	override computeAverageValue(values : Variation) : int {
+		(values.music+values.thirsty+values.hungry+values.pee)/4
 	}
 	
 }

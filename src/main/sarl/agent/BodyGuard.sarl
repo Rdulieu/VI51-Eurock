@@ -16,7 +16,7 @@ agent BodyGuard extends AbstractAnimat {
 	uses  Lifecycle
 	
 	var seekBehaviour : SeekBehaviour
-	var wanderBehaviour : WanderBehaviour  
+	var wanderBehaviour : WanderBehaviour 
 	  
 	on Initialize{
 		super._handle_Initialize_0(occurrence) 
