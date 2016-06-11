@@ -6,8 +6,10 @@ import Behaviour.SeekBehaviour
 import Behaviour.WanderBehaviour
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
+import java.util.HashMap
 import org.arakhne.afc.math.continous.object2d.Point2f
 import vi51.util.ConstantContainer
+import vi51.util.Variation
 
 /**
  * @author Dudul
@@ -15,20 +17,23 @@ import vi51.util.ConstantContainer
  */
 agent Visitor extends AbstractAnimat {
 
-	uses  Lifecycle
+	uses  Lifecycle, DesireManager
 	
 	var seekBehaviour : SeekBehaviour
 	var wanderBehaviour : WanderBehaviour
 	
-	var listenMusic = ConstantContainer.BASIC_MUSIC_DESIRE
-	var drink = ConstantContainer.BASIC_THIRSTY
-	var hungry = ConstantContainer.BASIC_HUNGRY
+	var actionMapping : HashMap<String,Variation>
 	  
 	on Initialize{
-		super._handle_Initialize_0(occurrence) 
+		super._handle_Initialize_0(occurrence)
+		var desires = new VisitorDesire(ConstantContainer.BASIC_MUSIC_DESIRE,ConstantContainer.BASIC_THIRSTY,ConstantContainer.BASIC_HUNGRY,ConstantContainer.BASIC_PEE)
+		setSkill(DesireManager,desires)
 	}
 	
 	on Perception{
+		
+		var bestAction = chooseBestBasedOnAverageValue
+		
 		var body = occurrence.body
 		var target : Point2f = null
 		if(occurrence.objects.size()>0){

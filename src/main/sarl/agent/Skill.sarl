@@ -24,6 +24,11 @@ import vi51.environment.StaticObject
 import vi51.gui.Window
 import vi51.util.AddressUUIDScope
 import vi51.util.ConstantContainer
+import vi51.util.Actions
+import vi51.util.Variation
+import vi51.util.Variation
+import vi51.util.Actions
+import java.util.HashMap
 
 skill StandardPhysicEnvironment implements PhysicEnvironment { 
 
@@ -324,6 +329,82 @@ skill DefaultTimeManager implements TimeManager{
 	
 	override getTime : float {
 		time
+	}
+	
+}
+
+skill VisitorDesire implements DesireManager{
+	
+	var currentDesire : Variation
+	var	 actionMapping : HashMap<Actions, Variation>
+	
+	/**
+	 * start value for the desires of a visitor in parameter (between 0 and 100)
+	 */
+	new(music : int,thirsty : int,hungry : int,pee : int){
+		this.currentDesire = new Variation(music,thirsty,hungry,pee)
+		
+		actionMapping = new HashMap<Actions,Variation>();
+		actionMapping.put(Actions.Drink,new Variation(10,-40,20,30));
+		actionMapping.put(Actions.ListenMusic,new Variation(-1,1,1,1));
+		actionMapping.put(Actions.Eat,new Variation(10,20,-40,10));
+		actionMapping.put(Actions.Pee,new Variation(10,1,1,-50));
+		actionMapping.put(Actions.Move,new Variation(1,0,0,1));
+	}
+	
+	/**
+	 * return a new variation that is the sum of all values
+	 * @param var
+	 * @return
+	 */
+	override addVariation(v : Variation) : Variation {
+		
+		return new Variation(currentDesire.music+v.music,currentDesire.thirsty+v.thirsty,currentDesire.hungry+v.hungry,currentDesire.pee+v.pee)
+
+	}
+	
+	override applyVariation(actionToApply : Actions) {
+		
+		var change = actionMapping.get(actionToApply);
+		currentDesire.music=change.music;
+		currentDesire.hungry=change.hungry;
+		currentDesire.thirsty=change.thirsty;
+		currentDesire.pee=change.pee;
+	}
+	
+	/**
+	 * java code for now
+	 */
+	override chooseBestBasedOnAverageValue : Actions {
+		
+		var action = Actions.Move;
+		var bestAverage = currentDesire.computeAverageValue
+		var newAverage = this.addVariation(actionMapping.get(Actions.Drink)).computeAverageValue
+		if(newAverage<bestAverage){
+			action = Actions.Drink;
+			bestAverage = newAverage;
+		}
+		newAverage = this.addVariation(actionMapping.get(Actions.Eat)).computeAverageValue;
+		if(newAverage<bestAverage){
+			action = Actions.Eat;
+			bestAverage = newAverage;
+		}
+		newAverage = this.addVariation(actionMapping.get(Actions.Pee)).computeAverageValue;
+		if(newAverage<bestAverage){
+			action = Actions.Pee;
+			bestAverage = newAverage;
+		}
+		
+		return action;
+		
+	
+	}
+	
+	/**
+	 * 
+	 */
+	override computeAverageValue(values : Variation) : int {
+		(values.music+values.thirsty+values.hungry+values.pee)/4
 	}
 	
 }
