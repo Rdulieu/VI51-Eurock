@@ -9,6 +9,11 @@ import io.sarl.core.Lifecycle
 import java.util.HashMap
 import org.arakhne.afc.math.continous.object2d.Point2f
 import vi51.util.ConstantContainer
+import org.arakhne.afc.math.continous.object2d.Circle2f
+import java.util.ArrayList
+import vi51.environment.Perceivable
+import org.arakhne.afc.math.continous.object2d.Vector2f
+import vi51.util.Semantic
 import vi51.util.Variation
 
 /**
@@ -21,6 +26,7 @@ agent Visitor extends AbstractAnimat {
 	
 	var seekBehaviour : SeekBehaviour
 	var wanderBehaviour : WanderBehaviour
+	var recommandation : String
 	
 	var actionMapping : HashMap<String,Variation>
 	  
@@ -30,15 +36,63 @@ agent Visitor extends AbstractAnimat {
 		setSkill(DesireManager,desires)
 	}
 	
+	/**
+	 * return a new vector that should be the next velocity to respect private zone
+	 */
+	def PrivateZone(position : Point2f, liste : ArrayList<Perceivable>,velocity : Vector2f, targetType : Semantic) : Vector2f{
+		// Si target Buvette ou toilette s'arrêter pour faire la queue, sinon contourner
+		var returnVector = velocity
+		var radius = new Circle2f(position,ConstantContainer.PRIVATE_RADIUS)
+			for(object : liste){
+				if(radius.intersects(object.getBox)){
+					if(!targetType.equals("DrinkStand")&&!targetType.equals("EatStand")&&!targetType.equals("Toilet"))
+					{
+						var angle = velocity.signedAngle(object.getCurrentLinearMotion())
+						if(angle<90)
+						returnVector.turnVector(angle)
+					}
+					else
+					{
+						returnVector = new Vector2f(0,0)
+					}
+				}
+			}
+			
+			return returnVector
+	}	
+	
+	
 	on Perception{
 		
 		var bestAction = chooseBestBasedOnAverageValue
 		
 		var body = occurrence.body
 		var target : Point2f = null
+		var targetType : String = null
 		if(occurrence.objects.size()>0){
 			for (object : occurrence.objects){
-				if (object.getName.equals("Scene1")){
+				if (object.getType.equals("Scene")){
+					target = object.getPosition()
+					targetType = "Scene"
+				}
+				else if (object.getType.equals("Toilet")){
+					target = object.getPosition()
+					targetType="Toilet"
+				}
+				else if (object.getType.equals("DrinkStand")){
+					target = object.getPosition()
+					targetType="DrinkStand"
+				}
+				else if (object.getType.equals("EatStand")){
+					target = object.getPosition()
+					targetType="EatStand"
+				}
+				else if (object.getType.equals("Gate")){
+					target = object.getPosition()
+					targetType="Gate"
+				}
+				// Groupe favori
+				else if (object.getName.equals(this.recommandation)){
 					target = object.getPosition()
 				}
 			}
