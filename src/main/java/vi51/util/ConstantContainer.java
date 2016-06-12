@@ -11,7 +11,7 @@ public class ConstantContainer {
 	public static final float BASIC_PERCEPTION_DISTANCE=30f;
 	public static final float BASIC_MAX_LINEAR_SPEED=1f;
 	public static final float BASIC_MAX_ANGULAR_SPEED=1f;
-	public static final float BASIC_RADIUS=2;
+	public static final float BASIC_RADIUS=1;
 	public static final float PRIVATE_RADIUS=4;
 	public static final int BASIC_LIFE = 100;
 	public static final int BASIC_DAMAGE= 10;
@@ -55,7 +55,7 @@ public class ConstantContainer {
 	public static final int FRAME_PERIOD = 1000/MAX_FPS;
 	
 	//GUI Related
-	public static final Dimension BG_SIZE = new Dimension (1033,867);
+	public static final Dimension BG_SIZE = new Dimension (1000,1000);
 	public static final Dimension VIEWPORT_SIZE = new Dimension (800,600);
 	
 	//TEST Related

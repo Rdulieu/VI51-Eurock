@@ -177,20 +177,24 @@ skill DefaultMapManagerSkill implements MapManager {
 		if (team == 1 ){
 			x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_X)
 			y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_Y)
+			x+=40
+			y+=40
 			while (!environment.world.canMoveInside(x, y)) {
 				x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_X)
 				y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_Y)
+				x+=40
+				y+=40
 			}
 		} else {
 			x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_X)
 			y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_Y)
-			x+=110
-			y+=110
+			x+=100
+			y+=100
 			while (!environment.world.canMoveInside(x, y)) {
 				x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_X)
 				y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_Y)
-				x+=110
-				y+=110
+				x+=100
+				y+=100
 			}
 			
 		}
@@ -201,37 +205,67 @@ skill DefaultMapManagerSkill implements MapManager {
 	override createMapSurroundings {
 		var id : UUID
 		id = UUID.randomUUID()
-		var objects = <EnvironmentObject>newArrayList(/*new StaticObject(10,100,10,200,id,environment.getjBoxWorld,environment.getWorld())*/)
-		/*var temp = objects.get(0)
-		if(temp instanceof StaticObject)temp.setAsScene("Scene1")
+		var objects = <EnvironmentObject>newArrayList()
+		
+		//Walls	
+		objects.add(new StaticObject(32,152,32,48,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(100,5,200,10,id,environment.getjBoxWorld,environment.getWorld()))
-		temp = objects.get(1)
-		if(temp instanceof StaticObject)temp.setAsScene("Scene2")
+		objects.add(new StaticObject(7,52,7,52,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(170,100,20,200,id,environment.getjBoxWorld,environment.getWorld()))
-		id = UUID.randomUUID()*/
-		objects.add(new StaticObject(32,152,64,96,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(42,168,42,32,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(7,52,14,104,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(77,190,77,10,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(42,168,84,64,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(167,72,33,72,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(77,190,154,20,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(155,48,45,48,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(167,72,66,144,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(100,18,100,18,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(155,48,90,96,id,environment.getjBoxWorld,environment.getWorld()))
-		id = UUID.randomUUID()
-		objects.add(new StaticObject(100,18,200,36,id,environment.getjBoxWorld,environment.getWorld()))
-		/*id = UUID.randomUUID()
 		objects.add(new StaticObject(1,100,2,200,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
 		objects.add(new StaticObject(100,1,200,2,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
 		objects.add(new StaticObject(199,100,2,200,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(100,199,200,2,id,environment.getjBoxWorld,environment.getWorld()))*/
+		objects.add(new StaticObject(100,199,200,2,id,environment.getjBoxWorld,environment.getWorld()))
+		id = UUID.randomUUID()
+		objects.add(new StaticObject(86,189,86,1,id,environment.getjBoxWorld,environment.getWorld()))
+		id = UUID.randomUUID()
+		objects.add(new StaticObject(192,189,8,1,id,environment.getjBoxWorld,environment.getWorld()))
+		
+		//Scenes
+		id = UUID.randomUUID()
+		var temp = new StaticObject(64,42,16,6,id,environment.getjBoxWorld,environment.getWorld())
+		temp.setAsScene("Scene1")
+		id = UUID.randomUUID()
+		temp = new StaticObject(69,120,5,12,id,environment.getjBoxWorld,environment.getWorld())
+		temp.setAsScene("Scene2")
+		
+		//Toilets
+		id = UUID.randomUUID()
+		temp = new StaticObject(17,78,5,10,id,environment.getjBoxWorld,environment.getWorld())
+		temp.setAsToilet("Toilet1")
+		id = UUID.randomUUID()
+		temp = new StaticObject(131,120,5,10,id,environment.getjBoxWorld,environment.getWorld())
+		temp.setAsToilet("Toilet2")
+		
+		//Drink Stands
+		id = UUID.randomUUID()
+		temp = new StaticObject(42,104,14,4,id,environment.getjBoxWorld,environment.getWorld())
+		temp.setAsDrinkStand("Drink1")
+		
+		//Food Stands
+		id = UUID.randomUUID()
+		temp = new StaticObject(107,64,5,12,id,environment.getjBoxWorld,environment.getWorld())
+		temp.setAsEatStand("Food1")
+		
+		//Gates
+		id = UUID.randomUUID()
+		temp = new StaticObject(178,189,6,1,id,environment.getjBoxWorld,environment.getWorld())
+		temp.setAsGate("Gate")
+		
+		
 		this.environment.addObjectToWorld(objects)
 	}
 	
