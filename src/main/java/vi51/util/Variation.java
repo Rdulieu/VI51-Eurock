@@ -56,28 +56,40 @@ public class Variation{
 	public void addMusic(int i) {
 	  this.music+=i;
 	  if(this.music<0)this.music=0;
-	  if(this.music>100)this.music=100;
+	  if(this.music>ConstantContainer.MAX_DESIRE)this.music=ConstantContainer.MAX_DESIRE;
 	}
 	
 	public void addHungry(int i) {
 		  this.hungry+=i;
 		  if(this.hungry<0)this.hungry=0;
-		  if(this.hungry>100)this.hungry=0;
+		  if(this.hungry>ConstantContainer.MAX_DESIRE)this.hungry=ConstantContainer.MAX_DESIRE;
 		}
 	
 	public void addThirsty(int i) {
 		  this.thirsty+=i;
 		  if(this.thirsty<0)this.thirsty=0;
-		  if(this.thirsty>100)this.thirsty=0;
+		  if(this.thirsty>ConstantContainer.MAX_DESIRE)this.thirsty=ConstantContainer.MAX_DESIRE;
 		}
 	
 	public void addPee(int i) {
 		  this.pee+=i;
 		  if(this.pee<0)this.pee=0;
-		  if(this.pee>100)this.pee=100;
+		  if(this.pee>ConstantContainer.MAX_DESIRE)this.pee=ConstantContainer.MAX_DESIRE;
 		}
 
 	public boolean musicIsPriority() {
-	  return (this.music-20>this.hungry && this.music-20>this.thirsty && this.music-20>this.pee);
+	  return (this.music-ConstantContainer.MUSIC_PRIORITY_DIFFERENCE>this.hungry && this.music-ConstantContainer.MUSIC_PRIORITY_DIFFERENCE>this.thirsty && this.music-ConstantContainer.MUSIC_PRIORITY_DIFFERENCE>this.pee);
+	}
+	
+	public boolean drinkIsPriority() {
+		  return (this.thirsty-ConstantContainer.THIRSTY_PRIORITY_DIFFERENCE>this.hungry && this.thirsty-ConstantContainer.THIRSTY_PRIORITY_DIFFERENCE>this.thirsty && this.thirsty-ConstantContainer.THIRSTY_PRIORITY_DIFFERENCE>this.pee);
+	}
+	
+	public boolean eatIsPriority() {
+		  return (this.hungry-ConstantContainer.HUNGRY_PRIORITY_DIFFERENCE>this.hungry && this.hungry-ConstantContainer.HUNGRY_PRIORITY_DIFFERENCE>this.thirsty && this.hungry-ConstantContainer.HUNGRY_PRIORITY_DIFFERENCE>this.pee);
+	}
+	
+	public boolean peeIsPriority() {
+		  return (this.pee-ConstantContainer.PEE_PRIORITY_DIFFERENCE>this.hungry && this.pee-ConstantContainer.PEE_PRIORITY_DIFFERENCE>this.thirsty && this.pee-ConstantContainer.PEE_PRIORITY_DIFFERENCE>this.pee);
 	}
 }

@@ -275,32 +275,39 @@ skill DefaultMapManagerSkill implements MapManager {
 		id = UUID.randomUUID()
 		var temp = new StaticObject(64,42,16,6,id,environment.getjBoxWorld,environment.getWorld())
 		temp.setAsScene("Scene1")
+		objects.add(temp)
 		id = UUID.randomUUID()
 		temp = new StaticObject(69,120,5,12,id,environment.getjBoxWorld,environment.getWorld())
 		temp.setAsScene("Scene2")
+		objects.add(temp)
 		
 		//Toilets
 		id = UUID.randomUUID()
 		temp = new StaticObject(17,78,5,10,id,environment.getjBoxWorld,environment.getWorld())
 		temp.setAsToilet("Toilet1")
+		objects.add(temp)
 		id = UUID.randomUUID()
 		temp = new StaticObject(131,120,5,10,id,environment.getjBoxWorld,environment.getWorld())
 		temp.setAsToilet("Toilet2")
+		objects.add(temp)
 		
 		//Drink Stands
 		id = UUID.randomUUID()
 		temp = new StaticObject(42,104,14,4,id,environment.getjBoxWorld,environment.getWorld())
 		temp.setAsDrinkStand("Drink1")
+		objects.add(temp)
 		
 		//Food Stands
 		id = UUID.randomUUID()
 		temp = new StaticObject(107,64,5,12,id,environment.getjBoxWorld,environment.getWorld())
 		temp.setAsEatStand("Food1")
+		objects.add(temp)
 		
 		//Gates
 		id = UUID.randomUUID()
 		temp = new StaticObject(178,189,6,1,id,environment.getjBoxWorld,environment.getWorld())
 		temp.setAsGate("Gate")
+		objects.add(temp)
 		
 		this.environment.addObjectToWorld(objects)
 	}
@@ -409,17 +416,17 @@ skill VisitorDesire implements DesireManager{
 	var	 actionMapping : HashMap<Actions, Variation>
 	
 	/**
-	 * start value for the desires of a visitor in parameter (between 0 and 100)
+	 * start value for the desires of a visitor in parameter (between 0 and MAX_DESIRE (1000))
 	 */
 	new(music : int,thirsty : int,hungry : int,pee : int){
 		this.currentDesire = new Variation(music,thirsty,hungry,pee)
 		
 		actionMapping = new HashMap<Actions,Variation>();
-		actionMapping.put(Actions.Drink,new Variation(10,-40,20,30));
-		actionMapping.put(Actions.ListenMusic,new Variation(-1,1,1,1));
-		actionMapping.put(Actions.Eat,new Variation(10,20,-40,10));
-		actionMapping.put(Actions.Pee,new Variation(10,1,1,-50));
-		actionMapping.put(Actions.Move,new Variation(1,0,0,1));
+		actionMapping.put(Actions.Drink,new Variation(50,-300,50,50));
+		actionMapping.put(Actions.ListenMusic,new Variation(-10,1,1,1));
+		actionMapping.put(Actions.Eat,new Variation(50,50,-300,50));
+		actionMapping.put(Actions.Pee,new Variation(50,50,50,-300));
+		actionMapping.put(Actions.Move,new Variation(5,1,1,1));
 	}
 	
 	/**
@@ -447,10 +454,16 @@ skill VisitorDesire implements DesireManager{
 	 */
 	override chooseBestBasedOnAverageValue : Actions {
 		
-		var action = Actions.Move;
+		var action = Actions.ListenMusic;
 		var bestAverage = currentDesire.computeAverageValue
 		if(this.currentDesire.musicIsPriority){
 			action = Actions.ListenMusic
+		}else if(this.currentDesire.drinkIsPriority){
+			action = Actions.Drink
+		}else if(this.currentDesire.peeIsPriority){
+			action = Actions.Pee
+		}else if(this.currentDesire.eatIsPriority){
+			action = Actions.Eat
 		}else{
 			var newAverage = this.addVariation(actionMapping.get(Actions.Drink)).computeAverageValue
 			if(newAverage<bestAverage){

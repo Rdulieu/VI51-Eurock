@@ -51,19 +51,19 @@ agent Visitor extends AbstractAnimat {
 				if((object.getType.equals(Semantic.Visitor) || object.getType.equals(Semantic.BodyGuard)) && radius.intersects(object.getBox))nearBodies.add(object)
 				
 				else if (bestAction.equals(Actions.ListenMusic) &&  object.getType.equals(Semantic.Scene)){
-					target = object.getPosition()
+					target = object.getBox.getClosestPointTo(body.position) as Point2f
 					targetType = Semantic.Scene
 				}
 				else if (bestAction.equals(Actions.Pee) && object.getType.equals(Semantic.Toilet)){
-					target = object.getPosition()
+					target = object.getBox.getClosestPointTo(body.position) as Point2f
 					targetType=Semantic.Toilet
 				}
 				else if (bestAction.equals(Actions.Drink) && object.getType.equals(Semantic.DrinkStand)){
-					target = object.getPosition()
+					target = object.getBox.getClosestPointTo(body.position) as Point2f
 					targetType=Semantic.DrinkStand
 				}
 				else if (bestAction.equals(Actions.Eat) && object.getType.equals(Semantic.EatStand)){
-					target = object.getPosition()
+					target = object.getBox.getClosestPointTo(body.position) as Point2f
 					targetType=Semantic.EatStand
 				}
 //				else if (object.getType.equals(Semantic.Gate)){
@@ -72,14 +72,14 @@ agent Visitor extends AbstractAnimat {
 //				}
 				// Groupe favori
 				else if (object.getName.equals(this.recommandation)){
-					target = object.getPosition()
+					target = object.getBox.getClosestPointTo(body.position) as Point2f
 					bestAction = Actions.ListenMusic
 					targetType = Semantic.Scene
 				}
 			}
 			if(target!=null){
 				this.seekBehaviour = new KinematicSeekBehaviour
-				applyVariation(bestAction)
+				if(target.distance(body.position)<5)applyVariation(bestAction)
 				var o = this.seekBehaviour.runSeek(
 					body.position,
 					body.currentLinearMotion.length,
