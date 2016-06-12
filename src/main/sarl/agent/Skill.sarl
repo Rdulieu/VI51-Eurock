@@ -1,4 +1,4 @@
-﻿package ^agent
+package ^agent
 
 import io.sarl.core.Behaviors
 import io.sarl.core.DefaultContextInteractions
@@ -13,7 +13,6 @@ import java.util.List
 import java.util.Random
 import java.util.UUID
 import java.util.concurrent.LinkedBlockingDeque
-import org.arakhne.afc.math.continous.object2d.Circle2f
 import org.arakhne.afc.math.continous.object2d.Point2f
 import org.arakhne.afc.math.continous.object2d.Vector2f
 import org.jbox2d.common.Vec2
