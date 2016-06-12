@@ -51,7 +51,7 @@ public class AgentBody extends DynamicObject implements Comparable<AgentBody>{
 	}
 	
 	public void SetAsTerrorist(){
-		this.semantic=Semantic.Terrorist;
+		this.semantic=Semantic.Zombie;
 	}
 	
 	/**

@@ -10,7 +10,7 @@ public enum Semantic {
 	//Agent
 	BodyGuard,
 	Visitor,
-	Terrorist,
+	Zombie,
 	//Others
 	Unknonw
 }
