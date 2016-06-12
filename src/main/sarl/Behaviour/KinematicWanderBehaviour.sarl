@@ -13,7 +13,7 @@ class KinematicWanderBehaviour implements WanderBehaviour{
 	val generator = new Random
 	
 	def random : float {
-		return generator.nextFloat
+		return generator.nextFloat - generator.nextFloat
 	}
 	
 	override runWander(position : Point2f, orientation : Vector2f, linearSpeed : float, maxLinear : float, angularSpeed : float, maxAngular : float) : BehaviourOutput {

@@ -44,9 +44,9 @@ capacity MapManager {
 	def getAgentBody(id : UUID) : AgentBody
 	
 	/** Create basic Unit */
-	def createUnit(perceptionDistance : float, team : int) : AgentBody
+	def createUnit(perceptionDistance : float, type: Semantic) : AgentBody
 	
-	def spawnAgent (spaceID : UUID, environmentID : UUID,agentType : Class<? extends Agent>,perceptionDistance : float,team : int) : UUID
+	def spawnAgent (spaceID : UUID, environmentID : UUID,agentType : Class<? extends Agent>,perceptionDistance : float,type : Semantic) : UUID
 	
 	/** Create the map surroundings walls */
 	def createMapSurroundings

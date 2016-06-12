@@ -20,6 +20,7 @@ import javax.swing.JScrollPane;
 import vi51.environment.AgentBody;
 import vi51.environment.Environment;
 import vi51.util.ConstantContainer;
+import vi51.util.Semantic;
 
 public class Window extends JFrame {
 
@@ -150,10 +151,12 @@ public class Window extends JFrame {
 		@Override
 		public void paint(Graphics g) {
 			for (Unit unit : Window.this.units.values()) {
-				if (unit.team == 1)
+				if (unit.type.equals(Semantic.BodyGuard))
 					unit.paint(g,image1, this);
-				else
+				else if(unit.type.equals(Semantic.Visitor))
 					unit.paint(g,image2, this);
+//				else if(unit.type.equals(Semantic.Zombie))
+//					unit.paint(g,image3, this);
 			}
 		}
 		

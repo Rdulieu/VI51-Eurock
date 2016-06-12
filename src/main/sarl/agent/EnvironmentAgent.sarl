@@ -2,7 +2,6 @@ package ^agent
 
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
-import io.sarl.core.Lifecycle
 import io.sarl.lang.core.Address
 import io.sarl.util.Scopes
 import java.util.UUID
@@ -10,6 +9,7 @@ import java.util.concurrent.LinkedBlockingDeque
 import vi51.environment.EnvironmentChangeQuery
 import vi51.environment.EnvironmentListener
 import vi51.util.ConstantContainer
+import vi51.util.Semantic
 
 /**
  * @author Olivier
@@ -39,7 +39,7 @@ agent EnvironmentAgent {
 		createMapSurroundings 
 		//we create the objects -> need to link the agents
 		for (var i=0;i<agentNumber;i++) {
-			spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
+			spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,Semantic.Visitor)
 //			spawnAgent(spaceID,this.getID,BodyGuard,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
 		}
 		
@@ -101,10 +101,10 @@ agent EnvironmentAgent {
 		synchronized(this) {
 
 			while(SpawnButtonRequestA){
-				spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
+				spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,Semantic.Visitor)
 			}
 			while(SpawnButtonRequestB){
-				spawnAgent(spaceID,this.getID,AgentTest,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
+				spawnAgent(spaceID,this.getID,BodyGuard,ConstantContainer.BASIC_PERCEPTION_DISTANCE,Semantic.BodyGuard)
 			}
 //			if(time%10==0){
 //				spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)

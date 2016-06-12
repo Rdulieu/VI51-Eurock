@@ -15,28 +15,21 @@ public class AgentBody extends DynamicObject implements Comparable<AgentBody>{
 	
 	private float perceptionDistance; 
 	private int life;
-	private int team;
 	private int damagePerStep;	
 
 
-	public AgentBody (float x, float y,float radius,int team,UUID agentId,World w,EnvMap map, float perceptionDistance) {
+	public AgentBody (float x, float y,float radius,UUID agentId,World w,EnvMap map, float perceptionDistance,Semantic type) {
 		super (x,y,radius,agentId,w,map);
 		this.perceptionDistance = perceptionDistance;
-		this.team = team;
 		this.life = ConstantContainer.BASIC_LIFE;
 		this.damagePerStep = ConstantContainer.BASIC_DAMAGE;
+		this.semantic = type;
 	}
 
 
 	public int getLife() {
 		return life;
 	}
-
-
-	public int getTeam() {
-		return team;
-	}
-
 
 	public float getPerceptionDistance() {
 		return perceptionDistance;

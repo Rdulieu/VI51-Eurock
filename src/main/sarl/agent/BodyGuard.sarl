@@ -1,11 +1,11 @@
 package ^agent
 
-import Behaviour.KinematicWanderBehaviour
 import Behaviour.SeekBehaviour
 import Behaviour.WanderBehaviour
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import java.util.UUID
+import vi51.util.Semantic
 
 /**
  * @author Dudul
@@ -28,7 +28,7 @@ agent BodyGuard extends AbstractAnimat {
 		var targetID : UUID = null
 		if(occurrence.objects.size()>0){
 			for (object : occurrence.objects){
-				if (object.getTeam() != body.getTeam() && object.getTeam() != 0){
+				if (object.getType.equals(Semantic.Zombie)){
 					targetID = object.getBodyId()
 				}
 			}

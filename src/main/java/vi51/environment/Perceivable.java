@@ -15,7 +15,6 @@ public final class Perceivable {
 	
 	private final UUID bodyId;
 	private final UUID objectId;
-	private int team = 0;
 	private Rectangle2f box;
 	private Point2f position;
 	private final float angle;
@@ -37,10 +36,6 @@ public final class Perceivable {
 		this.box = perceivedObject.getBox();
 		this.position = perceivedObject.getPosition().clone();
 		this.type = perceivedObject.getSemantic();
-		if (perceivedObject instanceof AgentBody) {
-			AgentBody Aobj = (AgentBody) perceivedObject;
-			this.team = Aobj.getTeam();
-		}
 		if (perceivedObject instanceof DynamicObject) {
 			DynamicObject dyObj = (DynamicObject) perceivedObject;
 			this.angle = dyObj.getAngle();
@@ -127,12 +122,6 @@ public final class Perceivable {
 	public UUID getObjectId() {
 		return objectId;
 	}
-
-
-	public int getTeam() {
-		return team;
-	}
-
 
 	public Rectangle2f getBox() {
 		return box;

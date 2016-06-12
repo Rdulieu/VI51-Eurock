@@ -11,6 +11,7 @@ import org.arakhne.afc.math.continous.object2d.Rectangle2f;
 import org.jbox2d.dynamics.World;
 
 import vi51.util.ConstantContainer;
+import vi51.util.Semantic;
 
 /**
  * the world map
@@ -111,25 +112,25 @@ public class EnvMap {
 	 * @return the body.
 	 * @throws Exception if it is impossible to retrieve the body constructor or to create the instance. 
 	 */
-	public <T extends AgentBody> T createBody(Class<T> bodyType,float x,float y, UUID agentId,int team,World w, float perceptionDistance) throws Exception {
+	public <T extends AgentBody> T createBody(Class<T> bodyType,float x,float y, UUID agentId,World w, float perceptionDistance,Semantic type) throws Exception {
 
 		UUID id = agentId;
 		if (id == null) {
 			id = UUID.randomUUID();
 		}
 
-		Constructor<T> cons = bodyType.getDeclaredConstructor(float.class, float.class, float.class,int.class, UUID.class,World.class,EnvMap.class, float.class);
-		T body = cons.newInstance(x, y,ConstantContainer.BASIC_RADIUS,team, id,w, this, perceptionDistance);
+		Constructor<T> cons = bodyType.getDeclaredConstructor(float.class, float.class, float.class, UUID.class,World.class,EnvMap.class, float.class,Semantic.class);
+		T body = cons.newInstance(x, y,ConstantContainer.BASIC_RADIUS, id,w, this, perceptionDistance,type);
 		this.bodies.put(id, body);
 		addObjects(body);
 
 		return body;
 	}
 
-	public boolean canMoveInside(int x, int y) {
-		
-		return (x>=ConstantContainer.MAP_LIMIT_MIN_X && y>=ConstantContainer.MAP_LIMIT_MIN_Y && x<width-ConstantContainer.MAP_LIMIT_MAX_X && y<height-ConstantContainer.MAP_LIMIT_MAX_Y);
-	}
+//	public boolean canMoveInside(int x, int y) {
+//		
+//		return (x>=ConstantContainer.MAP_LIMIT_MIN_X && y>=ConstantContainer.MAP_LIMIT_MIN_Y && x<width-ConstantContainer.MAP_LIMIT_MAX_X && y<height-ConstantContainer.MAP_LIMIT_MAX_Y);
+//	}
 
 	public float getHeight() {
 		

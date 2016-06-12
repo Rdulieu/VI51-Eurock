@@ -10,7 +10,7 @@ public class ConstantContainer {
 	
 	public static final float BASIC_PERCEPTION_DISTANCE=30f;
 	public static final float BASIC_MAX_LINEAR_SPEED=1f;
-	public static final float BASIC_MAX_ANGULAR_SPEED=1f;
+	public static final float BASIC_MAX_ANGULAR_SPEED=0.3f;
 	public static final float BASIC_RADIUS=1;
 	public static final float PRIVATE_RADIUS=4;
 	public static final int BASIC_LIFE = 100;
@@ -45,8 +45,14 @@ public class ConstantContainer {
 	public static final float MAP_LIMIT_MAX_X = 40;
 	public static final float MAP_LIMIT_MAX_Y = 40;
 	
-	public static final int RANDOM_SPAWN_X = 30;
-	public static final int RANDOM_SPAWN_Y = 30;
+	public static final int RANDOM_SPAWN_RANGE_X = 30;
+	public static final int RANDOM_SPAWN_RANGE_Y = 30;
+	public static final int RANDOM_SPAWN_VISITOR_X = 170;
+	public static final int RANDOM_SPAWN_VISITOR_Y = 170;
+	public static final int RANDOM_SPAWN_BODYGUARD_X = 50;
+	public static final int RANDOM_SPAWN_BODYGUARD_Y = 50;
+	public static final int RANDOM_SPAWN_ZOMBIE_X = 100;
+	public static final int RANDOM_SPAWN_ZOMBIE_Y = 100;
 	
 	//TREE Related
 	public static final int NB_MAX_OBJECT_IN_NODE = 10;

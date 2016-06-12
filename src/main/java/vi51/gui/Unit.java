@@ -10,16 +10,17 @@ import javax.swing.JPanel;
 import org.arakhne.afc.math.continous.object2d.Point2f;
 
 import vi51.environment.AgentBody;
+import vi51.util.Semantic;
 
 public class Unit {
 
 	protected UUID id;
-	protected int team;
+	protected Semantic type;
 	protected Point2f position;
 	
 	public Unit(AgentBody a){
 		position = a.getPosition();
-		team = a.getTeam();
+		type = a.getSemantic();
 		id = a.getId();
 	}
 	

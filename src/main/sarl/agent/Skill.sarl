@@ -197,34 +197,45 @@ skill DefaultMapManagerSkill implements MapManager {
 		this.environment.world.getAgentBody(id)
 	}
 
-	override createUnit(perceptionDistance : float, team : int) : AgentBody {
+	override createUnit(perceptionDistance : float, type : Semantic) : AgentBody {
 		var x : int
 		var y : int
-		if (team == 1 ){
-			x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_X)
-			y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_Y)
-			x+=40
-			y+=40
-			while (!environment.world.canMoveInside(x, y)) {
-				x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_X)
-				y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_Y)
-				x+=40
-				y+=40
-			}
-		} else {
-			x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_X)
-			y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_Y)
-			x+=100
-			y+=100
-			while (!environment.world.canMoveInside(x, y)) {
-				x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_X)
-				y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_Y)
-				x+=100
-				y+=100
-			}
-			
+		if (type.equals(Semantic.Visitor)){
+			x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_RANGE_X)
+			y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_RANGE_Y)
+			x+=ConstantContainer.RANDOM_SPAWN_VISITOR_X
+			y+=ConstantContainer.RANDOM_SPAWN_VISITOR_Y
+//			while (!environment.world.canMoveInside(x, y)) {
+//				x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_RANGE_X)
+//				y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_RANGE_Y)
+//				x+=ConstantContainer.RANDOM_SPAWN_VISITOR_X
+//				y+=ConstantContainer.RANDOM_SPAWN_VISITOR_Y
+//			}
+		} else if(type.equals(Semantic.BodyGuard)){
+			x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_RANGE_X)
+			y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_RANGE_Y)
+			x+=ConstantContainer.RANDOM_SPAWN_BODYGUARD_X
+			y+=ConstantContainer.RANDOM_SPAWN_BODYGUARD_Y
+//			while (!environment.world.canMoveInside(x, y)) {
+//				x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_RANGE_X)
+//				y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_RANGE_Y)
+//				x+=ConstantContainer.RANDOM_SPAWN_BODYGUARD_X
+//				y+=ConstantContainer.RANDOM_SPAWN_BODYGUARD_Y
+//			}	
+		} else if(type.equals(Semantic.Zombie)){
+			x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_RANGE_X)
+			y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_RANGE_Y)
+			x+=ConstantContainer.RANDOM_SPAWN_ZOMBIE_X
+			y+=ConstantContainer.RANDOM_SPAWN_ZOMBIE_Y
+//			while (!environment.world.canMoveInside(x, y)) {
+//				x = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_RANGE_X)
+//				y = this.random.nextInt(ConstantContainer.RANDOM_SPAWN_RANGE_Y)
+//				x+=ConstantContainer.RANDOM_SPAWN_ZOMBIE_X
+//				y+=ConstantContainer.RANDOM_SPAWN_ZOMBIE_Y
+//			}
+		
 		}
-		return this.environment.world.createBody(typeof(AgentBody),x,y,null,team,this.environment.getjBoxWorld(),perceptionDistance)
+		return this.environment.world.createBody(typeof(AgentBody),x,y,null,this.environment.getjBoxWorld(),perceptionDistance,type)
 	
 	}
 	
@@ -318,8 +329,8 @@ skill DefaultMapManagerSkill implements MapManager {
 		}
 	}
 	
-	override spawnAgent (spaceID : UUID, environmentID : UUID,agentType : Class<? extends Agent>,perceptionDistance : float,team : int) : UUID {
-			var body = createUnit(perceptionDistance,team)
+	override spawnAgent (spaceID : UUID, environmentID : UUID,agentType : Class<? extends Agent>,perceptionDistance : float,type : Semantic) : UUID {
+			var body = createUnit(perceptionDistance,type)
 			var agentParameters : List<Object> = newArrayList(spaceID,environmentID)
 			spawnInContextWithID(
 			agentType,
@@ -438,20 +449,25 @@ skill VisitorDesire implements DesireManager{
 		
 		var action = Actions.Move;
 		var bestAverage = currentDesire.computeAverageValue
-		var newAverage = this.addVariation(actionMapping.get(Actions.Drink)).computeAverageValue
-		if(newAverage<bestAverage){
-			action = Actions.Drink;
-			bestAverage = newAverage;
-		}
-		newAverage = this.addVariation(actionMapping.get(Actions.Eat)).computeAverageValue;
-		if(newAverage<bestAverage){
-			action = Actions.Eat;
-			bestAverage = newAverage;
-		}
-		newAverage = this.addVariation(actionMapping.get(Actions.Pee)).computeAverageValue;
-		if(newAverage<bestAverage){
-			action = Actions.Pee;
-			bestAverage = newAverage;
+		if(this.currentDesire.musicIsPriority){
+			action = Actions.ListenMusic
+		}else{
+			var newAverage = this.addVariation(actionMapping.get(Actions.Drink)).computeAverageValue
+			if(newAverage<bestAverage){
+				action = Actions.Drink;
+				bestAverage = newAverage;
+			}
+			newAverage = this.addVariation(actionMapping.get(Actions.Eat)).computeAverageValue;
+			if(newAverage<bestAverage){
+				action = Actions.Eat;
+				bestAverage = newAverage;
+			}
+			newAverage = this.addVariation(actionMapping.get(Actions.Pee)).computeAverageValue;
+			if(newAverage<bestAverage){
+				action = Actions.Pee;
+				bestAverage = newAverage;
+			}
+			
 		}
 		
 		return action;
