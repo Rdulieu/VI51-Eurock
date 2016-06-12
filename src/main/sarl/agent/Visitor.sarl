@@ -86,7 +86,7 @@ agent Visitor extends AbstractAnimat {
 					body.maxLinearSpeed,
 					target
 				)
-				o.setLinear(PrivateZone(body.position,nearBodies,body.currentLinearMotion,targetType))
+				//o.setLinear(PrivateZone(body.position,nearBodies,body.currentLinearMotion,targetType))
 				o.emitInfluence(occurrence.time)
 			}else{
 				this.wanderBehaviour = new KinematicWanderBehaviour

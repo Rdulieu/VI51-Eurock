@@ -1,11 +1,17 @@
 package ^agent
 
+import Behaviour.KinematicSeekBehaviour
 import Behaviour.KinematicWanderBehaviour
 import Behaviour.SeekBehaviour
 import Behaviour.WanderBehaviour
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
-import java.util.UUID
+import java.util.ArrayList
+import org.arakhne.afc.math.continous.object2d.Circle2f
+import org.arakhne.afc.math.continous.object2d.Point2f
+import vi51.environment.Perceivable
+import vi51.util.ConstantContainer
+import vi51.util.Semantic
 
 /**
  * @author Dudul
@@ -16,7 +22,27 @@ agent Terrorist extends AbstractAnimat {
 	uses  Lifecycle
 	
 	var seekBehaviour : SeekBehaviour
-	var wanderBehaviour : WanderBehaviour  
+	var wanderBehaviour : WanderBehaviour
+	
+	
+	
+	def getClosestHuman(position : Point2f, nearBodies : ArrayList<Perceivable>) : Point2f{
+		
+		var target = new Point2f
+		for(object : nearBodies){
+			
+			if (target.equals(null)){
+				target = object.position
+			}
+			else if (position.distance(target) > position.distance(object.position)){
+				target = object.position
+			}	
+			
+		}
+		return target
+	}
+	
+	
 	  
 	on Initialize{
 		super._handle_Initialize_0(occurrence) 
@@ -24,7 +50,55 @@ agent Terrorist extends AbstractAnimat {
 	
 	on Perception{
 
-		doNothing
+		var body = occurrence.body
+		var target : Point2f = null
+		var nearBodies = new ArrayList<Perceivable>
+		var radius = new Circle2f(body.position,ConstantContainer.PRIVATE_RADIUS)
 		
+		if(occurrence.objects.size()>0){
+			for(object : occurrence.objects){
+				if((object.getType.equals(Semantic.Visitor)) || (object.getType.equals(Semantic.BodyGuard)) && (body.getPosition.distance(body.getBox.getClosestPointTo(object.getPosition)) < radius.radius)) nearBodies.add(object)
+			}
+			if(nearBodies.size > 0){
+					target = getClosestHuman(body.position, nearBodies)
+			}
+			else{
+				target = null
+			}
+			if (target!=null){
+				this.seekBehaviour = new KinematicSeekBehaviour
+				var o = this.seekBehaviour.runSeek(
+					body.position,
+					body.currentLinearMotion.length,
+					body.maxLinearSpeed,
+					target
+					)
+				o.emitInfluence(occurrence.time)
+			}else{
+				this.wanderBehaviour = new KinematicWanderBehaviour
+				var o = this.wanderBehaviour.runWander(
+					body.position,
+					body.currentLinearMotion,
+					body.currentLinearMotion.length,
+					body.maxLinearSpeed,
+					body.currentAngularSpeed,
+					body.maxAngularSpeed
+					)
+				o.emitInfluence(occurrence.time)
+			}
+		}else{
+			this.wanderBehaviour = new KinematicWanderBehaviour
+			var o = this.wanderBehaviour.runWander(
+				body.position,
+				body.currentLinearMotion,
+				body.currentLinearMotion.length,
+				body.maxLinearSpeed,
+				body.currentAngularSpeed,
+				body.maxAngularSpeed
+				)
+			o.emitInfluence(occurrence.time)
+		}
+		doNothing
 	}
+
 }
