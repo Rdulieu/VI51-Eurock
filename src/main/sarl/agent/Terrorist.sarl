@@ -23,8 +23,8 @@ agent Terrorist extends AbstractAnimat {
 	}
 	
 	on Perception{
-		
-		
+
+		doNothing
 		
 	}
 }

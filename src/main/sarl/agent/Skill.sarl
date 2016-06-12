@@ -367,6 +367,16 @@ skill DefaultMapManagerSkill implements MapManager {
  		}
  		return false
 	}
+	override SpawnButtonRequestC : boolean {
+		if (!this.environment.getEventFire().isEmpty()){
+ 			if (this.environment.getEventFire().element().getUpdateAction.equals("SpawnC")){
+ 				this.environment.getEventFire().take()
+ 				return true
+ 			}
+ 			return false
+ 		}
+ 		return false
+	}
 	
 	override test {
 		if (this.environment.getEventFire().isEmpty()){

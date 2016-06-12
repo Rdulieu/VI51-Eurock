@@ -120,6 +120,7 @@ public class Window extends JFrame {
 		private static final long serialVersionUID = 1L;
 		protected BufferedImage image1;
 		protected BufferedImage image2;
+		protected BufferedImage image3;
 		
 		public UnitPanel (){
 			super();
@@ -134,14 +135,22 @@ public class Window extends JFrame {
 		    	g.drawImage(image1, 0, 0, image1.getWidth(), image1.getHeight(), null);
 		    	g.dispose();
 		    	image1=newImage;
-				assert (url != null);
 				url = getClass().getClassLoader().getResource("images/unit2.png");
+				assert (url != null);
 				image2 = ImageIO.read(url);
 				newImage = new BufferedImage(image2.getWidth(), image2.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		    	g = newImage.createGraphics();
 		    	g.drawImage(image2, 0, 0, image2.getWidth(), image2.getHeight(), null);
 		    	g.dispose();
 		    	image2=newImage;
+				url = getClass().getClassLoader().getResource("images/unit3.png");
+				assert (url != null);
+				image3 = ImageIO.read(url);
+				newImage = new BufferedImage(image3.getWidth(), image3.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		    	g = newImage.createGraphics();
+		    	g.drawImage(image3, 0, 0, image3.getWidth(), image3.getHeight(), null);
+		    	g.dispose();
+		    	image3=newImage;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -155,8 +164,8 @@ public class Window extends JFrame {
 					unit.paint(g,image1, this);
 				else if(unit.type.equals(Semantic.Visitor))
 					unit.paint(g,image2, this);
-//				else if(unit.type.equals(Semantic.Zombie))
-//					unit.paint(g,image3, this);
+				else if(unit.type.equals(Semantic.Zombie))
+					unit.paint(g,image3, this);
 			}
 		}
 		

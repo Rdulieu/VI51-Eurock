@@ -19,14 +19,16 @@ public class Hub extends JPanel{
 	JLabel nbUnit;//example to know the number of unit on the map
 	JButton newSpawnA;
 	JButton newSpawnB;
+	JButton newSpawnC;
 	JPanel container;
 	public Hub (Environment environment) {//World TBD
 		super();
 		this.environment = environment;
 		container = new JPanel();
-		nbUnit = new JLabel ("pop : 0/200");
-		newSpawnA = new SpawnButtonA("Spawn Team Blue",environment);
-		newSpawnB = new SpawnButtonB("Spawn Team Red",environment);
+		nbUnit = new JLabel ("pop : 0");
+		newSpawnA = new SpawnButtonA("Spawn Visitor",environment);
+		newSpawnB = new SpawnButtonB("Spawn Bodyguard",environment);
+		newSpawnC = new SpawnButtonC("Spawn Zombie", environment);
 		
 		nbUnit.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
 		container.setBackground(Color.LIGHT_GRAY);
@@ -35,6 +37,7 @@ public class Hub extends JPanel{
 		this.add(nbUnit);
 		this.add(newSpawnA);
 		this.add(newSpawnB);
+		this.add(newSpawnC);
 		this.add(container);
 		this.setLayout(new GridLayout(6,1));
 		this.setBackground(Color.LIGHT_GRAY);
@@ -44,7 +47,7 @@ public class Hub extends JPanel{
 	
 	//This method permit to update the informations displayed in the hub
 	public void updateLabels() {
-		nbUnit.setText("pop. : "+this.nbUnitDisplayed()+"/200");
+		nbUnit.setText("pop. : "+this.nbUnitDisplayed());
 	}
 
 	private int nbUnitDisplayed() {

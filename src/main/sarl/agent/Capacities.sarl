@@ -64,6 +64,8 @@ capacity MapManager {
 	
 	def SpawnButtonRequestB : boolean
 	
+	def SpawnButtonRequestC : boolean
+	
 	def test
 	
 }
