@@ -1,4 +1,4 @@
-package ^agent
+﻿package ^agent
 
 import io.sarl.core.Behaviors
 import io.sarl.core.DefaultContextInteractions
@@ -8,10 +8,13 @@ import io.sarl.lang.core.Agent
 import io.sarl.util.OpenEventSpace
 import io.sarl.util.Scopes
 import java.util.ArrayList
+import java.util.HashMap
 import java.util.List
 import java.util.Random
 import java.util.UUID
 import java.util.concurrent.LinkedBlockingDeque
+import org.arakhne.afc.math.continous.object2d.Circle2f
+import org.arakhne.afc.math.continous.object2d.Point2f
 import org.arakhne.afc.math.continous.object2d.Vector2f
 import org.jbox2d.common.Vec2
 import vi51.environment.AgentBody
@@ -19,16 +22,15 @@ import vi51.environment.Environment
 import vi51.environment.EnvironmentChangeQuery
 import vi51.environment.EnvironmentEvent
 import vi51.environment.EnvironmentObject
+import vi51.environment.Perceivable
 import vi51.environment.RTree
 import vi51.environment.StaticObject
 import vi51.gui.Window
+import vi51.util.Actions
 import vi51.util.AddressUUIDScope
 import vi51.util.ConstantContainer
-import vi51.util.Actions
+import vi51.util.Semantic
 import vi51.util.Variation
-import vi51.util.Variation
-import vi51.util.Actions
-import java.util.HashMap
 
 skill StandardPhysicEnvironment implements PhysicEnvironment { 
 
@@ -59,6 +61,31 @@ skill StandardPhysicEnvironment implements PhysicEnvironment {
 		this.physicSpace.emit(^event, new AddressUUIDScope(this.environmentID))
 		this.physicSpace = null
 	}*/
+	
+	/**
+	 * return a new vector that should be the next velocity to respect private zone
+	 */
+	override PrivateZone(position : Point2f, liste : ArrayList<Perceivable>,velocity : Vector2f, targetType : Semantic) : Vector2f{
+		// Si target Buvette ou toilette s'arrêter pour faire la queue, sinon contourner
+		var returnVector = velocity
+			for(object : liste){
+				var angle = velocity.signedAngle(object.getCurrentLinearMotion())
+				if(Math::abs(angle)<90){
+					if(!targetType.equals(Semantic.DrinkStand)&&!targetType.equals(Semantic.EatStand)&&!targetType.equals(Semantic.Toilet))
+					{						
+						returnVector.turnVector(angle)
+					}
+					else
+					{
+						returnVector = new Vector2f(0,0)
+					}
+					
+				}
+				
+			}
+			
+			return returnVector
+	}	
 	
 	override influenceKinematic(linearInfluence : Vector2f = null, angularInfluence : float = 0f,time : float = 0f) {
 		
@@ -222,13 +249,13 @@ skill DefaultMapManagerSkill implements MapManager {
 		id = UUID.randomUUID()
 		objects.add(new StaticObject(100,18,100,18,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(1,100,2,200,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(1,100,1,100,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(100,1,200,2,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(100,1,100,1,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(199,100,2,200,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(199,100,1,100,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(100,199,200,2,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(100,199,100,1,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
 		objects.add(new StaticObject(86,189,86,1,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
@@ -264,7 +291,6 @@ skill DefaultMapManagerSkill implements MapManager {
 		id = UUID.randomUUID()
 		temp = new StaticObject(178,189,6,1,id,environment.getjBoxWorld,environment.getWorld())
 		temp.setAsGate("Gate")
-		
 		
 		this.environment.addObjectToWorld(objects)
 	}
@@ -400,10 +426,10 @@ skill VisitorDesire implements DesireManager{
 	override applyVariation(actionToApply : Actions) {
 		
 		var change = actionMapping.get(actionToApply);
-		currentDesire.music=change.music;
-		currentDesire.hungry=change.hungry;
-		currentDesire.thirsty=change.thirsty;
-		currentDesire.pee=change.pee;
+		currentDesire.addMusic(change.music)
+		currentDesire.addHungry(change.hungry)
+		currentDesire.addThirsty(change.thirsty)
+		currentDesire.addPee(change.pee)
 	}
 	
 	/**

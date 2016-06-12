@@ -15,6 +15,7 @@ import vi51.environment.Perceivable
 import org.arakhne.afc.math.continous.object2d.Vector2f
 import vi51.util.Semantic
 import vi51.util.Variation
+import vi51.util.Actions
 
 /**
  * @author Dudul
@@ -27,83 +28,65 @@ agent Visitor extends AbstractAnimat {
 	var seekBehaviour : SeekBehaviour
 	var wanderBehaviour : WanderBehaviour
 	var recommandation : String
-	
-	var actionMapping : HashMap<String,Variation>
 	  
 	on Initialize{
 		super._handle_Initialize_0(occurrence)
 		var desires = new VisitorDesire(ConstantContainer.BASIC_MUSIC_DESIRE,ConstantContainer.BASIC_THIRSTY,ConstantContainer.BASIC_HUNGRY,ConstantContainer.BASIC_PEE)
 		setSkill(DesireManager,desires)
 	}
-	
-	/**
-	 * return a new vector that should be the next velocity to respect private zone
-	 */
-	def PrivateZone(position : Point2f, liste : ArrayList<Perceivable>,velocity : Vector2f, targetType : Semantic) : Vector2f{
-		// Si target Buvette ou toilette s'arrêter pour faire la queue, sinon contourner
-		var returnVector = velocity
-		var radius = new Circle2f(position,ConstantContainer.PRIVATE_RADIUS)
-			for(object : liste){
-				if(radius.intersects(object.getBox)){
-					if(!targetType.equals("DrinkStand")&&!targetType.equals("EatStand")&&!targetType.equals("Toilet"))
-					{
-						var angle = velocity.signedAngle(object.getCurrentLinearMotion())
-						if(angle<90)
-						returnVector.turnVector(angle)
-					}
-					else
-					{
-						returnVector = new Vector2f(0,0)
-					}
-				}
-			}
-			
-			return returnVector
-	}	
-	
-	
+		
 	on Perception{
 		
 		var bestAction = chooseBestBasedOnAverageValue
 		
 		var body = occurrence.body
 		var target : Point2f = null
-		var targetType : String = null
+		var targetType : Semantic = null
+		var nearBodies = new ArrayList<Perceivable>
+		var radius = new Circle2f(body.position,ConstantContainer.PRIVATE_RADIUS)
+		
 		if(occurrence.objects.size()>0){
 			for (object : occurrence.objects){
-				if (object.getType.equals("Scene")){
+				
+				if((object.getType.equals(Semantic.Visitor) || object.getType.equals(Semantic.BodyGuard)) && radius.intersects(object.getBox))nearBodies.add(object)
+				
+				else if (bestAction.equals(Actions.ListenMusic) &&  object.getType.equals(Semantic.Scene)){
 					target = object.getPosition()
-					targetType = "Scene"
+					targetType = Semantic.Scene
 				}
-				else if (object.getType.equals("Toilet")){
+				else if (bestAction.equals(Actions.Pee) && object.getType.equals(Semantic.Toilet)){
 					target = object.getPosition()
-					targetType="Toilet"
+					targetType=Semantic.Toilet
 				}
-				else if (object.getType.equals("DrinkStand")){
+				else if (bestAction.equals(Actions.Drink) && object.getType.equals(Semantic.DrinkStand)){
 					target = object.getPosition()
-					targetType="DrinkStand"
+					targetType=Semantic.DrinkStand
 				}
-				else if (object.getType.equals("EatStand")){
+				else if (bestAction.equals(Actions.Eat) && object.getType.equals(Semantic.EatStand)){
 					target = object.getPosition()
-					targetType="EatStand"
+					targetType=Semantic.EatStand
 				}
-				else if (object.getType.equals("Gate")){
-					target = object.getPosition()
-					targetType="Gate"
-				}
+//				else if (object.getType.equals(Semantic.Gate)){
+//					target = object.getPosition()
+//					targetType=Semantic.Gate
+//				}
 				// Groupe favori
 				else if (object.getName.equals(this.recommandation)){
 					target = object.getPosition()
+					bestAction = Actions.ListenMusic
+					targetType = Semantic.Scene
 				}
 			}
 			if(target!=null){
 				this.seekBehaviour = new KinematicSeekBehaviour
+				applyVariation(bestAction)
 				var o = this.seekBehaviour.runSeek(
 					body.position,
 					body.currentLinearMotion.length,
 					body.maxLinearSpeed,
 					target
 				)
+				o.setLinear(PrivateZone(body.position,nearBodies,body.currentLinearMotion,targetType))
 				o.emitInfluence(occurrence.time)
 			}else{
 				this.wanderBehaviour = new KinematicWanderBehaviour
@@ -132,6 +115,6 @@ agent Visitor extends AbstractAnimat {
 			o.emitInfluence(occurrence.time)
 		}
 		
-		
 	}
+
 }

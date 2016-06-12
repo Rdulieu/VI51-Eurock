@@ -1,14 +1,18 @@
 package ^agent
 
 import io.sarl.lang.core.Agent
+import java.util.ArrayList
 import java.util.UUID
 import java.util.concurrent.LinkedBlockingDeque
+import org.arakhne.afc.math.continous.object2d.Point2f
 import org.arakhne.afc.math.continous.object2d.Vector2f
 import vi51.environment.AgentBody
 import vi51.environment.EnvironmentChangeQuery
+import vi51.environment.Perceivable
 import vi51.environment.RTree
-import vi51.util.Variation
 import vi51.util.Actions
+import vi51.util.Semantic
+import vi51.util.Variation
 
 /**
  * @author Olivier
@@ -77,6 +81,8 @@ capacity PhysicEnvironment {
 	def influenceKinematic(linearInfluence : Vector2f = null, angularInfluence : float = 0f,time : float = 0f)
 	
 	def influenceAttack (time : float = 0f,target : UUID = null)
+	
+	def PrivateZone(position : Point2f, liste : ArrayList<Perceivable>,velocity : Vector2f, targetType : Semantic) : Vector2f
 }
 
 capacity TimeManager{

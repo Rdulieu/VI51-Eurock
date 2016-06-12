@@ -40,7 +40,7 @@ agent EnvironmentAgent {
 		//we create the objects -> need to link the agents
 		for (var i=0;i<agentNumber;i++) {
 			spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
-			spawnAgent(spaceID,this.getID,BodyGuard,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
+//			spawnAgent(spaceID,this.getID,BodyGuard,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
 		}
 		
 		updateWindow //mis a jour de la vue utilisateur
@@ -106,10 +106,10 @@ agent EnvironmentAgent {
 			while(SpawnButtonRequestB){
 				spawnAgent(spaceID,this.getID,AgentTest,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
 			}
-			if(time%10==0){
-				spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
-				spawnAgent(spaceID,this.getID,BodyGuard,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
-			}
+//			if(time%10==0){
+//				spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
+//				spawnAgent(spaceID,this.getID,BodyGuard,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
+//			}
 			
 
 			resolveInfluences(actions)		
@@ -129,4 +129,6 @@ agent EnvironmentAgent {
 			listener.gameOver()
 		}
 	}
+	
+	
 }

@@ -52,4 +52,20 @@ public class Variation{
 	public void setPee(int pee) {
 		this.pee = pee;
 	}
+
+	public void addMusic(int i) {
+	  this.music+=i;
+	}
+	
+	public void addHungry(int i) {
+		  this.hungry+=i;
+		}
+	
+	public void addThirsty(int i) {
+		  this.thirsty+=i;
+		}
+	
+	public void addPee(int i) {
+		  this.pee+=i;
+		}
 }
