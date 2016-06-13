@@ -277,7 +277,7 @@ skill DefaultMapManagerSkill implements MapManager {
 		temp.setAsScene("Scene1")
 		objects.add(temp)
 		id = UUID.randomUUID()
-		temp = new StaticObject(69,120,5,12,id,environment.getjBoxWorld,environment.getWorld())
+		temp = new StaticObject(70,122,5,12,id,environment.getjBoxWorld,environment.getWorld())
 		temp.setAsScene("Scene2")
 		objects.add(temp)
 		
@@ -293,7 +293,7 @@ skill DefaultMapManagerSkill implements MapManager {
 		
 		//Drink Stands
 		id = UUID.randomUUID()
-		temp = new StaticObject(42,104,14,4,id,environment.getjBoxWorld,environment.getWorld())
+		temp = new StaticObject(41,101,14,4,id,environment.getjBoxWorld,environment.getWorld())
 		temp.setAsDrinkStand("Drink1")
 		objects.add(temp)
 		

@@ -13,11 +13,13 @@ public class ConstantContainer {
 	public static final float BASIC_ZOMBIE_PERCEPTION_DISTANCE=10f;
 	
 	public static final float BASIC_MAX_LINEAR_SPEED=1f;
+	public static final float ZOMBIE_MAX_LINEAR_SPEED=0.8f;
 	public static final float BASIC_MAX_ANGULAR_SPEED=0.2f;
 	public static final float BASIC_RADIUS=1;
 	public static final float PRIVATE_RADIUS=4;
 	public static final int ZOMBIE_RANGE=2;
 	public static final int BASIC_LIFE = 100;
+	public static final int ZOMBIE_LIFE = 500;
 	public static final int BASIC_DAMAGE= 10;
 
 	
@@ -68,7 +70,7 @@ public class ConstantContainer {
 	//TREE Related
 	public static final int NB_MAX_OBJECT_IN_NODE = 10;
 	public static final int NB_CHILDREN = 4;
-	public static final int MAX_FPS = 25;
+	public static final int MAX_FPS = 30;
 	public static final int FRAME_PERIOD = 1000/MAX_FPS;
 	
 	//GUI Related
