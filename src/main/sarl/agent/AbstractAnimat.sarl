@@ -18,7 +18,7 @@ agent AbstractAnimat {
 			occurrence.parameters.get(1) as UUID)
 		setSkill(PhysicEnvironment, physicSkill)
 		//print("Agent Spawn\n")
-		emit(new agentReady)  
+//		  emit(new agentReady)  
 	}
 	
 	def getMaxLinear(p : Perceivable) : float {

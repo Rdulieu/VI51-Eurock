@@ -21,7 +21,7 @@ agent BodyGuard extends AbstractAnimat {
 	  
 	on Initialize{
 		super._handle_Initialize_0(occurrence) 
-
+		emit(new agentReady)
 	}
 	
 	on Perception{

@@ -24,7 +24,8 @@ agent Terrorist extends AbstractAnimat {
 	var wanderBehaviour : WanderBehaviour
 	  
 	on Initialize{
-		super._handle_Initialize_0(occurrence)  
+		super._handle_Initialize_0(occurrence) 
+		emit(new agentReady)
 	}
 	
 	on Perception{

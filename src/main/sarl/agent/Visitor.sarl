@@ -30,6 +30,7 @@ agent Visitor extends AbstractAnimat {
 		super._handle_Initialize_0(occurrence)
 		var desires = new VisitorDesire(ConstantContainer.BASIC_MUSIC_DESIRE,ConstantContainer.BASIC_THIRSTY,ConstantContainer.BASIC_HUNGRY,ConstantContainer.BASIC_PEE)
 		setSkill(DesireManager,desires)
+		emit(new agentReady)
 	}
 		
 	on Perception{
@@ -78,7 +79,7 @@ agent Visitor extends AbstractAnimat {
 			if(target!=null){
 				this.seekBehaviour = new KinematicSeekBehaviour
 				if((targetType.equals(Semantic.Scene) && target.distance(body.position)<10) ||
-					((targetType.equals(Semantic.DrinkStand) || targetType.equals(Semantic.EatStand) || targetType.equals(Semantic.Toilet))&& target.distance(body.position)<5))
+					((targetType.equals(Semantic.DrinkStand) || targetType.equals(Semantic.EatStand) || targetType.equals(Semantic.Toilet))&& target.distance(body.position)<3))
 				{
 					applyVariation(bestAction)
 				}else{

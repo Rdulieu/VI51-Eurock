@@ -26,7 +26,7 @@ agent EnvironmentAgent {
 	var adr : Address
 	var spaceID : UUID  
 	var countInit = 0
-	val agentNumber = ConstantContainer.NB_AGENTS
+	var agentNumber = ConstantContainer.NB_AGENTS
 
 	on Initialize{
 		
@@ -47,10 +47,12 @@ agent EnvironmentAgent {
 		
 	}
 	
+	//Initialisation
 	on agentReady {
 		synchronized(this) {
 			countInit++
 			if(countInit==agentNumber){
+				agentNumber=-1
 				emit(new RunBeginingOfStep,Scopes::addresses(adr))
 			}
 			
