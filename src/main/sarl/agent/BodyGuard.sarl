@@ -6,6 +6,7 @@ import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import java.util.UUID
 import vi51.util.Semantic
+import Behaviour.KinematicWanderBehaviour
 
 /**
  * @author Dudul
@@ -35,11 +36,31 @@ agent BodyGuard extends AbstractAnimat {
 			if(targetID!=null){
 				influenceAttack(occurrence.time,targetID)
 			}else{
-				doNothing
+				this.wanderBehaviour = new KinematicWanderBehaviour
+				//position : Point2f, orientation : Vector2f, linearSpeed : float, maxLinear : float, angularSpeed : float, maxAngular : float
+				var o = this.wanderBehaviour.runWander(
+				body.position,
+				body.currentLinearMotion,
+				body.currentLinearMotion.length,
+				body.maxLinearSpeed,
+				body.currentAngularSpeed,
+				body.maxAngularSpeed
+				)
+				o.emitInfluence(occurrence.time)
 			}
 		
 		}else{
-			doNothing
+			this.wanderBehaviour = new KinematicWanderBehaviour
+			//position : Point2f, orientation : Vector2f, linearSpeed : float, maxLinear : float, angularSpeed : float, maxAngular : float
+			var o = this.wanderBehaviour.runWander(
+			body.position,
+			body.currentLinearMotion,
+			body.currentLinearMotion.length,
+			body.maxLinearSpeed,
+			body.currentAngularSpeed,
+			body.maxAngularSpeed
+			)
+			o.emitInfluence(occurrence.time)
 		}
 	}
 		

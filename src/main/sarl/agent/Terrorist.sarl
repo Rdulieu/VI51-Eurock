@@ -22,22 +22,19 @@ agent Terrorist extends AbstractAnimat {
 	
 	var seekBehaviour : SeekBehaviour
 	var wanderBehaviour : WanderBehaviour
-	
-	
 	  
 	on Initialize{
-		super._handle_Initialize_0(occurrence) 
+		super._handle_Initialize_0(occurrence)  
 	}
 	
 	on Perception{
 
 		var body = occurrence.body
 		var target : Perceivable = null
-		var radius = new Circle2f(body.position,ConstantContainer.PRIVATE_RADIUS)
 		
 		if(occurrence.objects.size()>0){
 			for(object : occurrence.objects){
-				if((object.getType.equals(Semantic.Visitor)) || (object.getType.equals(Semantic.BodyGuard)) && (body.getPosition.distance(body.getBox.getClosestPointTo(object.getPosition)) < radius.radius)){
+				if((object.getType.equals(Semantic.Visitor)) || (object.getType.equals(Semantic.BodyGuard))){
 					if (target == null){
 						target = object
 					}
@@ -47,16 +44,17 @@ agent Terrorist extends AbstractAnimat {
 				}
 			}
 			if (target!=null){
-				this.seekBehaviour = new KinematicSeekBehaviour
-				var o = this.seekBehaviour.runSeek(
-					body.position,
-					body.currentLinearMotion.length,
-					body.maxLinearSpeed,
-					target.position
-					)
-				o.emitInfluence(occurrence.time)
 				if(body.getPosition.distance(target.position) < ConstantContainer.ZOMBIE_RANGE){
-					influenceAttack(occurrence.time,target.getBodyID)
+						influenceAttack(occurrence.time,target.getBodyID)
+				}else{	
+					this.seekBehaviour = new KinematicSeekBehaviour
+					var o = this.seekBehaviour.runSeek(
+						body.position,
+						body.currentLinearMotion.length,
+						body.maxLinearSpeed,
+						target.position
+						)
+					o.emitInfluence(occurrence.time)
 				}
 			}else{
 				this.wanderBehaviour = new KinematicWanderBehaviour

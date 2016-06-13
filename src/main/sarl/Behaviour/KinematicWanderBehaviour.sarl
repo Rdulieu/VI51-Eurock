@@ -20,7 +20,12 @@ class KinematicWanderBehaviour implements WanderBehaviour{
 
 		val l = orientation.clone
 		if(linearSpeed<=1){
-			l.add(new Vector2f(-1,-1))
+			if(position.getX<=100 && position.getY<=100){
+				l.add(new Vector2f(1,1))
+			}else{
+				l.add(new Vector2f(-1,-1))
+			}
+			
 		}
 		l.normalize()		
 		l.scale(maxLinear)
