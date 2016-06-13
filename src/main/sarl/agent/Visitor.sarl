@@ -27,7 +27,7 @@ agent Visitor extends AbstractAnimat {
 	
 	var seekBehaviour : SeekBehaviour
 	var wanderBehaviour : WanderBehaviour
-	var recommandation : String
+	var recommandation : String = "Scene1"
 	  
 	on Initialize{
 		super._handle_Initialize_0(occurrence)
@@ -53,6 +53,13 @@ agent Visitor extends AbstractAnimat {
 				else if (bestAction.equals(Actions.ListenMusic) &&  object.getType.equals(Semantic.Scene)){
 					target = object.getBox.getClosestPointTo(body.position) as Point2f
 					targetType = Semantic.Scene
+									// Groupe favori
+					if (object.getName.equals(this.recommandation)){
+						target = object.getBox.getClosestPointTo(body.position) as Point2f
+						bestAction = Actions.ListenMusic
+						targetType = Semantic.Scene
+					}
+					
 				}
 				else if (bestAction.equals(Actions.Pee) && object.getType.equals(Semantic.Toilet)){
 					target = object.getBox.getClosestPointTo(body.position) as Point2f
@@ -70,16 +77,15 @@ agent Visitor extends AbstractAnimat {
 //					target = object.getPosition()
 //					targetType=Semantic.Gate
 //				}
-				// Groupe favori
-				else if (object.getName.equals(this.recommandation)){
-					target = object.getBox.getClosestPointTo(body.position) as Point2f
-					bestAction = Actions.ListenMusic
-					targetType = Semantic.Scene
-				}
 			}
 			if(target!=null){
 				this.seekBehaviour = new KinematicSeekBehaviour
-				if(target.distance(body.position)<5)applyVariation(bestAction)
+				if(target.distance(body.position)<5)
+				{
+					applyVariation(bestAction)
+				}else{
+					applyVariation(Actions.Move)
+				}
 				var o = this.seekBehaviour.runSeek(
 					body.position,
 					body.currentLinearMotion.length,
@@ -89,6 +95,7 @@ agent Visitor extends AbstractAnimat {
 				//o.setLinear(PrivateZone(body.position,nearBodies,body.currentLinearMotion,targetType))
 				o.emitInfluence(occurrence.time)
 			}else{
+				applyVariation(Actions.Move)
 				this.wanderBehaviour = new KinematicWanderBehaviour
 				//position : Point2f, orientation : Vector2f, linearSpeed : float, maxLinear : float, angularSpeed : float, maxAngular : float
 				var o = this.wanderBehaviour.runWander(
@@ -102,6 +109,7 @@ agent Visitor extends AbstractAnimat {
 				o.emitInfluence(occurrence.time)
 			}
 		}else{
+			applyVariation(Actions.Move)
 			this.wanderBehaviour = new KinematicWanderBehaviour
 			//position : Point2f, orientation : Vector2f, linearSpeed : float, maxLinear : float, angularSpeed : float, maxAngular : float
 			var o = this.wanderBehaviour.runWander(

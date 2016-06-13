@@ -109,10 +109,10 @@ agent EnvironmentAgent {
 			while(SpawnButtonRequestC){
 				spawnAgent(spaceID,this.getID,Terrorist,ConstantContainer.BASIC_PERCEPTION_DISTANCE,Semantic.Zombie)
 			}
-//			if(time%10==0){
-//				spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,1)
+			if(time%10==0){
+//				spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,Semantic.Visitor)
 //				spawnAgent(spaceID,this.getID,BodyGuard,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
-//			}
+			}
 			
 
 			resolveInfluences(actions)		
