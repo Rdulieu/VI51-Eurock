@@ -16,7 +16,7 @@ import vi51.util.Semantic
  * @author Dudul
  *
  */
-agent Terrorist extends AbstractAnimat {
+agent Terrorist extends AbstractHuman {
 
 	uses  Lifecycle
 	
@@ -24,7 +24,10 @@ agent Terrorist extends AbstractAnimat {
 	var wanderBehaviour : WanderBehaviour
 	  
 	on Initialize{
-		super._handle_Initialize_0(occurrence)  
+		synchronized(this){
+			super._handle_Initialize_0(occurrence) 
+			emit(new agentReady)
+		}
 	}
 	
 	on Perception{

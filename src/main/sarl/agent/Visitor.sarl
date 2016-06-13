@@ -20,7 +20,7 @@ import vi51.util.Semantic
  * @author Dudul
  *
  */
-agent Visitor extends AbstractAnimat {
+agent Visitor extends AbstractHuman {
 
 	uses  Lifecycle, DesireManager
 	
@@ -31,9 +31,16 @@ agent Visitor extends AbstractAnimat {
 	var recommandation : String /* = "Scene1"*/
 	  
 	on Initialize{
-		super._handle_Initialize_0(occurrence)
-		var desires = new VisitorDesire(ConstantContainer.BASIC_MUSIC_DESIRE,ConstantContainer.BASIC_THIRSTY,ConstantContainer.BASIC_HUNGRY,ConstantContainer.BASIC_PEE)
-		setSkill(DesireManager,desires)
+		synchronized(this){
+			super._handle_Initialize_0(occurrence)
+			var desires = new VisitorDesire(ConstantContainer.BASIC_MUSIC_DESIRE,ConstantContainer.BASIC_THIRSTY,ConstantContainer.BASIC_HUNGRY,ConstantContainer.BASIC_PEE)
+			setSkill(DesireManager,desires)
+			emit(new agentReady)
+		}
+	}
+	
+	on agentReady{
+		
 	}
 	
 	on AlertEvent{
@@ -84,23 +91,14 @@ agent Visitor extends AbstractAnimat {
 	//						targetType = Semantic.Scene
 	//					}
 				}
-				if(target!=null){
-					this.seekBehaviour = new KinematicSeekBehaviour
-					if((targetType.equals(Semantic.Scene) && target.distance(body.position)<10) ||
-						((targetType.equals(Semantic.DrinkStand) || targetType.equals(Semantic.EatStand) || targetType.equals(Semantic.Toilet))&& target.distance(body.position)<5))
-					{
-						applyVariation(bestAction)
-					}else{
-						applyVariation(Actions.Move)
-					}
-					var o = this.seekBehaviour.runSeek(
-						body.position,
-						body.currentLinearMotion.length,
-						body.maxLinearSpeed,
-						target
-					)
-					//o.setLinear(PrivateZone(body.position,nearBodies,body.currentLinearMotion,targetType))
-					o.emitInfluence(occurrence.time)
+
+			}
+			if(target!=null){
+				this.seekBehaviour = new KinematicSeekBehaviour
+				if((targetType.equals(Semantic.Scene) && target.distance(body.position)<10) ||
+					((targetType.equals(Semantic.DrinkStand) || targetType.equals(Semantic.EatStand) || targetType.equals(Semantic.Toilet))&& target.distance(body.position)<3))
+				{
+					applyVariation(bestAction)
 				}else{
 					applyVariation(Actions.Move)
 					this.wanderBehaviour = new KinematicWanderBehaviour

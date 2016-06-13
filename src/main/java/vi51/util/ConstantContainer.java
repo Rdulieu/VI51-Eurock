@@ -8,7 +8,7 @@ public class ConstantContainer {
 	//Agent or Body Related
 	public static final int NB_AGENTS = 1;
 	
-	public static final float BASIC_VISITOR_PERCEPTION_DISTANCE=50f;
+	public static final float BASIC_VISITOR_PERCEPTION_DISTANCE=40f;
 	public static final float BASIC_BODYGUARD_PERCEPTION_DISTANCE=30f;
 	public static final float BASIC_ZOMBIE_PERCEPTION_DISTANCE=10f;
 	
@@ -29,10 +29,10 @@ public class ConstantContainer {
 	public static final int BASIC_PEE=100;
 	public static final int MAX_DESIRE=1000;
 	
-	public static final int MUSIC_PRIORITY_DIFFERENCE = 10;
-	public static final int PEE_PRIORITY_DIFFERENCE = 20;
-	public static final int HUNGRY_PRIORITY_DIFFERENCE = 20;
-	public static final int THIRSTY_PRIORITY_DIFFERENCE = 20;
+	public static final int MUSIC_PRIORITY_DIFFERENCE = 20;
+	public static final int PEE_PRIORITY_DIFFERENCE = 0;
+	public static final int HUNGRY_PRIORITY_DIFFERENCE = 0;
+	public static final int THIRSTY_PRIORITY_DIFFERENCE = 0;
 	
 	//Influence related
 	public static final String MOTION_TYPE="MOTION";

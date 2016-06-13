@@ -27,7 +27,7 @@ public class StaticObject extends EnvironmentObject {
 		
 		//test with circle shape
 		PolygonShape ps = new PolygonShape();
-		ps.setAsBox(width,height);
+		ps.setAsBox(width/2,height/2);
 		
 		//fixture test
 		FixtureDef fd = new FixtureDef();
