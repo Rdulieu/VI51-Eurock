@@ -6,16 +6,13 @@ import Behaviour.SeekBehaviour
 import Behaviour.WanderBehaviour
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
-import java.util.HashMap
-import org.arakhne.afc.math.continous.object2d.Point2f
-import vi51.util.ConstantContainer
-import org.arakhne.afc.math.continous.object2d.Circle2f
 import java.util.ArrayList
+import org.arakhne.afc.math.continous.object2d.Circle2f
+import org.arakhne.afc.math.continous.object2d.Point2f
 import vi51.environment.Perceivable
-import org.arakhne.afc.math.continous.object2d.Vector2f
-import vi51.util.Semantic
-import vi51.util.Variation
 import vi51.util.Actions
+import vi51.util.ConstantContainer
+import vi51.util.Semantic
 
 /**
  * @author Dudul
@@ -27,7 +24,7 @@ agent Visitor extends AbstractAnimat {
 	
 	var seekBehaviour : SeekBehaviour
 	var wanderBehaviour : WanderBehaviour
-	var recommandation : String = "Scene1"
+	var recommandation : String /* = "Scene1"*/
 	  
 	on Initialize{
 		super._handle_Initialize_0(occurrence)
@@ -37,7 +34,8 @@ agent Visitor extends AbstractAnimat {
 		
 	on Perception{
 		
-		var bestAction = chooseBestBasedOnAverageValue
+//		var bestAction = chooseBestBasedOnAverageValue
+		var bestAction = chooseBestBasedOnMaxValue
 		
 		var body = occurrence.body
 		var target : Point2f = null
@@ -52,14 +50,7 @@ agent Visitor extends AbstractAnimat {
 				
 				else if (bestAction.equals(Actions.ListenMusic) &&  object.getType.equals(Semantic.Scene)){
 					target = object.getBox.getClosestPointTo(body.position) as Point2f
-					targetType = Semantic.Scene
-									// Groupe favori
-					if (object.getName.equals(this.recommandation)){
-						target = object.getBox.getClosestPointTo(body.position) as Point2f
-						bestAction = Actions.ListenMusic
-						targetType = Semantic.Scene
-					}
-					
+					targetType = Semantic.Scene					
 				}
 				else if (bestAction.equals(Actions.Pee) && object.getType.equals(Semantic.Toilet)){
 					target = object.getBox.getClosestPointTo(body.position) as Point2f
@@ -77,10 +68,17 @@ agent Visitor extends AbstractAnimat {
 //					target = object.getPosition()
 //					targetType=Semantic.Gate
 //				}
+//									// Groupe favori
+//					if (object.getName.equals(this.recommandation)){
+//						target = object.getBox.getClosestPointTo(body.position) as Point2f
+//						bestAction = Actions.ListenMusic
+//						targetType = Semantic.Scene
+//					}
 			}
 			if(target!=null){
 				this.seekBehaviour = new KinematicSeekBehaviour
-				if(target.distance(body.position)<5)
+				if((targetType.equals(Semantic.Scene) && target.distance(body.position)<10) ||
+					((targetType.equals(Semantic.DrinkStand) || targetType.equals(Semantic.EatStand) || targetType.equals(Semantic.Toilet))&& target.distance(body.position)<5))
 				{
 					applyVariation(bestAction)
 				}else{

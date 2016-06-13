@@ -39,7 +39,7 @@ agent EnvironmentAgent {
 		createMapSurroundings 
 		//we create the objects -> need to link the agents
 		for (var i=0;i<agentNumber;i++) {
-			spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,Semantic.Visitor)
+			spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_VISITOR_PERCEPTION_DISTANCE,Semantic.Visitor)
 //			spawnAgent(spaceID,this.getID,BodyGuard,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
 		}
 		
@@ -101,17 +101,16 @@ agent EnvironmentAgent {
 		synchronized(this) {
 
 			while(SpawnButtonRequestA){
-				spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,Semantic.Visitor)
+				spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_VISITOR_PERCEPTION_DISTANCE,Semantic.Visitor)
 			}
 			while(SpawnButtonRequestB){
-				spawnAgent(spaceID,this.getID,BodyGuard,ConstantContainer.BASIC_PERCEPTION_DISTANCE,Semantic.BodyGuard)
+				spawnAgent(spaceID,this.getID,BodyGuard,ConstantContainer.BASIC_BODYGUARD_PERCEPTION_DISTANCE,Semantic.BodyGuard)
 			}
 			while(SpawnButtonRequestC){
-				spawnAgent(spaceID,this.getID,Terrorist,ConstantContainer.BASIC_PERCEPTION_DISTANCE,Semantic.Zombie)
+				spawnAgent(spaceID,this.getID,Terrorist,ConstantContainer.BASIC_ZOMBIE_PERCEPTION_DISTANCE,Semantic.Zombie)
 			}
 			if(time%10==0){
-//				spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_PERCEPTION_DISTANCE,Semantic.Visitor)
-//				spawnAgent(spaceID,this.getID,BodyGuard,ConstantContainer.BASIC_PERCEPTION_DISTANCE,2)
+				spawnAgent(spaceID,this.getID,Visitor,ConstantContainer.BASIC_VISITOR_PERCEPTION_DISTANCE,Semantic.Visitor)
 			}
 			
 

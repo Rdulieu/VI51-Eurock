@@ -82,14 +82,14 @@ public class Variation{
 	}
 	
 	public boolean drinkIsPriority() {
-		  return (this.thirsty-ConstantContainer.THIRSTY_PRIORITY_DIFFERENCE>this.hungry && this.thirsty-ConstantContainer.THIRSTY_PRIORITY_DIFFERENCE>this.thirsty && this.thirsty-ConstantContainer.THIRSTY_PRIORITY_DIFFERENCE>this.pee);
+		  return (this.thirsty-ConstantContainer.THIRSTY_PRIORITY_DIFFERENCE>this.hungry && this.thirsty-ConstantContainer.THIRSTY_PRIORITY_DIFFERENCE>this.pee+30);
 	}
 	
 	public boolean eatIsPriority() {
-		  return (this.hungry-ConstantContainer.HUNGRY_PRIORITY_DIFFERENCE>this.hungry && this.hungry-ConstantContainer.HUNGRY_PRIORITY_DIFFERENCE>this.thirsty && this.hungry-ConstantContainer.HUNGRY_PRIORITY_DIFFERENCE>this.pee);
+		  return (this.hungry-ConstantContainer.HUNGRY_PRIORITY_DIFFERENCE>this.thirsty && this.hungry-ConstantContainer.HUNGRY_PRIORITY_DIFFERENCE>this.pee);
 	}
 	
 	public boolean peeIsPriority() {
-		  return (this.pee-ConstantContainer.PEE_PRIORITY_DIFFERENCE>this.hungry && this.pee-ConstantContainer.PEE_PRIORITY_DIFFERENCE>this.thirsty && this.pee-ConstantContainer.PEE_PRIORITY_DIFFERENCE>this.pee);
+		  return (this.pee-ConstantContainer.PEE_PRIORITY_DIFFERENCE>this.hungry && this.pee-ConstantContainer.PEE_PRIORITY_DIFFERENCE>this.thirsty);
 	}
 }

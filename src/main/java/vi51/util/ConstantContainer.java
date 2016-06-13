@@ -8,7 +8,10 @@ public class ConstantContainer {
 	//Agent or Body Related
 	public static final int NB_AGENTS = 1;
 	
-	public static final float BASIC_PERCEPTION_DISTANCE=50f;
+	public static final float BASIC_VISITOR_PERCEPTION_DISTANCE=50f;
+	public static final float BASIC_BODYGUARD_PERCEPTION_DISTANCE=30f;
+	public static final float BASIC_ZOMBIE_PERCEPTION_DISTANCE=10f;
+	
 	public static final float BASIC_MAX_LINEAR_SPEED=1f;
 	public static final float BASIC_MAX_ANGULAR_SPEED=0.2f;
 	public static final float BASIC_RADIUS=1;
@@ -24,10 +27,10 @@ public class ConstantContainer {
 	public static final int BASIC_PEE=100;
 	public static final int MAX_DESIRE=1000;
 	
-	public static final int MUSIC_PRIORITY_DIFFERENCE = 100;
-	public static final int PEE_PRIORITY_DIFFERENCE = 200;
-	public static final int HUNGRY_PRIORITY_DIFFERENCE = 200;
-	public static final int THIRSTY_PRIORITY_DIFFERENCE = 200;
+	public static final int MUSIC_PRIORITY_DIFFERENCE = 10;
+	public static final int PEE_PRIORITY_DIFFERENCE = 20;
+	public static final int HUNGRY_PRIORITY_DIFFERENCE = 20;
+	public static final int THIRSTY_PRIORITY_DIFFERENCE = 20;
 	
 	//Influence related
 	public static final String MOTION_TYPE="MOTION";
@@ -65,7 +68,7 @@ public class ConstantContainer {
 	//TREE Related
 	public static final int NB_MAX_OBJECT_IN_NODE = 10;
 	public static final int NB_CHILDREN = 4;
-	public static final int MAX_FPS = 20;
+	public static final int MAX_FPS = 25;
 	public static final int FRAME_PERIOD = 1000/MAX_FPS;
 	
 	//GUI Related

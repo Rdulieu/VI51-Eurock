@@ -471,15 +471,8 @@ skill VisitorDesire implements DesireManager{
 		
 		var action = Actions.ListenMusic;
 		var bestAverage = currentDesire.computeAverageValue
-		if(this.currentDesire.musicIsPriority){
-			action = Actions.ListenMusic
-//		}else if(this.currentDesire.drinkIsPriority){
-//			action = Actions.Drink
-//		}else if(this.currentDesire.peeIsPriority){
-//			action = Actions.Pee
-//		}else if(this.currentDesire.eatIsPriority){
-//			action = Actions.Eat
-		}else{
+
+		
 			var newAverage = this.addVariation(actionMapping.get(Actions.Drink)).computeAverageValue
 			if(newAverage<bestAverage){
 				action = Actions.Drink;
@@ -496,7 +489,7 @@ skill VisitorDesire implements DesireManager{
 				bestAverage = newAverage;
 			}
 				
-		}
+		
 		
 		return action;
 		
@@ -507,7 +500,22 @@ skill VisitorDesire implements DesireManager{
 	 * 
 	 */
 	override computeAverageValue(values : Variation) : int {
-		(values.music+values.thirsty+values.hungry+values.pee)/7
+		(values.music+values.thirsty+values.hungry+values.pee)/4
+	}
+	
+	override chooseBestBasedOnMaxValue : Actions {
+		var action = Actions.ListenMusic
+		
+		if(this.currentDesire.musicIsPriority){
+			action = Actions.ListenMusic
+		}else if(this.currentDesire.drinkIsPriority){
+			action = Actions.Drink
+		}else if(this.currentDesire.peeIsPriority){
+			action = Actions.Pee
+		}else if(this.currentDesire.eatIsPriority){
+			action = Actions.Eat
+		}
+		return action
 	}
 	
 }

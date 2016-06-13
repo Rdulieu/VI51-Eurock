@@ -111,5 +111,7 @@ capacity DesireManager{
 	 
 	 def chooseBestBasedOnAverageValue : Actions
 	 
+	 def chooseBestBasedOnMaxValue : Actions
+	 
 	 def computeAverageValue(values : Variation) : int
 }
