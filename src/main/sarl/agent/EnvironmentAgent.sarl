@@ -52,7 +52,6 @@ agent EnvironmentAgent {
 		synchronized(this) {
 			countInit++
 			if(countInit==agentNumber){
-				agentNumber=-1
 				emit(new RunBeginingOfStep,Scopes::addresses(adr))
 			}
 			

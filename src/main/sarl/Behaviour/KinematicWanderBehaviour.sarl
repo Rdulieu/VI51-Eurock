@@ -27,7 +27,7 @@ class KinematicWanderBehaviour implements WanderBehaviour{
 					l.add(new Vector2f(1,-1))
 				}		
 			}else if(position.getY<=100){
-				l.add(new Vector2f(1,-1))
+				l.add(new Vector2f(-1,1))
 			}else{
 				l.add(new Vector2f(-1,-1))
 			}

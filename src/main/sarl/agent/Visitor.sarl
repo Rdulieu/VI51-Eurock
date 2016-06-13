@@ -18,7 +18,7 @@ import vi51.util.Semantic
  * @author Dudul
  *
  */
-agent Visitor extends AbstractAnimat {
+agent Visitor extends AbstractHuman {
 
 	uses  Lifecycle, DesireManager
 	
@@ -27,10 +27,16 @@ agent Visitor extends AbstractAnimat {
 	var recommandation : String /* = "Scene1"*/
 	  
 	on Initialize{
-		super._handle_Initialize_0(occurrence)
-		var desires = new VisitorDesire(ConstantContainer.BASIC_MUSIC_DESIRE,ConstantContainer.BASIC_THIRSTY,ConstantContainer.BASIC_HUNGRY,ConstantContainer.BASIC_PEE)
-		setSkill(DesireManager,desires)
-		emit(new agentReady)
+		synchronized(this){
+			super._handle_Initialize_0(occurrence)
+			var desires = new VisitorDesire(ConstantContainer.BASIC_MUSIC_DESIRE,ConstantContainer.BASIC_THIRSTY,ConstantContainer.BASIC_HUNGRY,ConstantContainer.BASIC_PEE)
+			setSkill(DesireManager,desires)
+			emit(new agentReady)
+		}
+	}
+	
+	on agentReady{
+		
 	}
 		
 	on Perception{

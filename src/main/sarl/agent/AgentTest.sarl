@@ -12,7 +12,7 @@ import vi51.util.Semantic
  * @author Dudul
  *
  */
-agent AgentTest extends AbstractAnimat {
+agent AgentTest extends AbstractHuman {
 
 	uses  Lifecycle
 	

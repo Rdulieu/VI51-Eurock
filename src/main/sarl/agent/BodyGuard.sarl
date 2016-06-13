@@ -12,7 +12,7 @@ import Behaviour.KinematicWanderBehaviour
  * @author Dudul
  *
  */
-agent BodyGuard extends AbstractAnimat {
+agent BodyGuard extends AbstractHuman {
 
 	uses  Lifecycle
 	
@@ -20,8 +20,10 @@ agent BodyGuard extends AbstractAnimat {
 	var wanderBehaviour : WanderBehaviour 
 	  
 	on Initialize{
-		super._handle_Initialize_0(occurrence) 
-		emit(new agentReady)
+		synchronized(this){
+			super._handle_Initialize_0(occurrence) 
+			emit(new agentReady)
+		}
 	}
 	
 	on Perception{

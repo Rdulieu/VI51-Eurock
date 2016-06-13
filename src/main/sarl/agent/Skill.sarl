@@ -255,7 +255,7 @@ skill DefaultMapManagerSkill implements MapManager {
 		id = UUID.randomUUID()
 		objects.add(new StaticObject(167,72,66,144,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
-		objects.add(new StaticObject(155,48,90,96,id,environment.getjBoxWorld,environment.getWorld()))
+		objects.add(new StaticObject(155,48,85,96,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
 		objects.add(new StaticObject(100,18,200,36,id,environment.getjBoxWorld,environment.getWorld()))
 		id = UUID.randomUUID()
@@ -277,7 +277,7 @@ skill DefaultMapManagerSkill implements MapManager {
 		temp.setAsScene("Scene1")
 		objects.add(temp)
 		id = UUID.randomUUID()
-		temp = new StaticObject(70,122,5,12,id,environment.getjBoxWorld,environment.getWorld())
+		temp = new StaticObject(70,122,10,24,id,environment.getjBoxWorld,environment.getWorld())
 		temp.setAsScene("Scene2")
 		objects.add(temp)
 		
@@ -293,7 +293,7 @@ skill DefaultMapManagerSkill implements MapManager {
 		
 		//Drink Stands
 		id = UUID.randomUUID()
-		temp = new StaticObject(41,101,14,4,id,environment.getjBoxWorld,environment.getWorld())
+		temp = new StaticObject(41,101,28,8,id,environment.getjBoxWorld,environment.getWorld())
 		temp.setAsDrinkStand("Drink1")
 		objects.add(temp)
 		
@@ -433,15 +433,15 @@ skill VisitorDesire implements DesireManager{
 		this.currentDesire = new Variation(music,thirsty,hungry,pee)
 		
 		actionMapping = new HashMap<Actions,Variation>();
-		actionMapping.put(Actions.Drink,new Variation(100,-1000,10,100));
-		actionMapping.put(Actions.ListenMusic,new Variation(-3,1,1,1));
-		actionMapping.put(Actions.Eat,new Variation(100,100,-1000,100));
-		actionMapping.put(Actions.Pee,new Variation(100,0,0,-1000));
+		actionMapping.put(Actions.Drink,new Variation(100,-1000,1,10));
+		actionMapping.put(Actions.ListenMusic,new Variation(-1,random,random,random));
+		actionMapping.put(Actions.Eat,new Variation(100,1,-1000,1));
+		actionMapping.put(Actions.Pee,new Variation(100,1,1,-1000));
 		actionMapping.put(Actions.Move,new Variation(random,random,random,random));
 	}
 	
 	def random : int{
-		return generatorRdm.nextInt(3)
+		return generatorRdm.nextInt(1)
 	}
 	
 	/**

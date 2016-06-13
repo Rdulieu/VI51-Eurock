@@ -8,7 +8,7 @@ public class ConstantContainer {
 	//Agent or Body Related
 	public static final int NB_AGENTS = 1;
 	
-	public static final float BASIC_VISITOR_PERCEPTION_DISTANCE=30f;
+	public static final float BASIC_VISITOR_PERCEPTION_DISTANCE=40f;
 	public static final float BASIC_BODYGUARD_PERCEPTION_DISTANCE=30f;
 	public static final float BASIC_ZOMBIE_PERCEPTION_DISTANCE=10f;
 	
