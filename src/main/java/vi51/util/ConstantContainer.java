@@ -13,8 +13,10 @@ public class ConstantContainer {
 	public static final float BASIC_MAX_ANGULAR_SPEED=0.2f;
 	public static final float BASIC_RADIUS=1;
 	public static final float PRIVATE_RADIUS=4;
+	public static final int ZOMBIE_RANGE=2;
 	public static final int BASIC_LIFE = 100;
 	public static final int BASIC_DAMAGE= 10;
+
 	
 	public static final int BASIC_MUSIC_DESIRE=800;
 	public static final int BASIC_THIRSTY=500;

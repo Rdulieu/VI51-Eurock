@@ -6,9 +6,8 @@ import Behaviour.SeekBehaviour
 import Behaviour.WanderBehaviour
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
-import java.util.ArrayList
+import java.util.UUID
 import org.arakhne.afc.math.continous.object2d.Circle2f
-import org.arakhne.afc.math.continous.object2d.Point2f
 import vi51.environment.Perceivable
 import vi51.util.ConstantContainer
 import vi51.util.Semantic
@@ -25,24 +24,6 @@ agent Terrorist extends AbstractAnimat {
 	var wanderBehaviour : WanderBehaviour
 	
 	
-	
-	def getClosestHuman(position : Point2f, nearBodies : ArrayList<Perceivable>) : Point2f{
-		
-		var target = new Point2f
-		for(object : nearBodies){
-			
-			if (target.equals(null)){
-				target = object.position
-			}
-			else if (position.distance(target) > position.distance(object.position)){
-				target = object.position
-			}	
-			
-		}
-		return target
-	}
-	
-	
 	  
 	on Initialize{
 		super._handle_Initialize_0(occurrence) 
@@ -51,19 +32,19 @@ agent Terrorist extends AbstractAnimat {
 	on Perception{
 
 		var body = occurrence.body
-		var target : Point2f = null
-		var nearBodies = new ArrayList<Perceivable>
+		var target : Perceivable = null
 		var radius = new Circle2f(body.position,ConstantContainer.PRIVATE_RADIUS)
 		
 		if(occurrence.objects.size()>0){
 			for(object : occurrence.objects){
-				if((object.getType.equals(Semantic.Visitor)) || (object.getType.equals(Semantic.BodyGuard)) && (body.getPosition.distance(body.getBox.getClosestPointTo(object.getPosition)) < radius.radius)) nearBodies.add(object)
-			}
-			if(nearBodies.size > 0){
-					target = getClosestHuman(body.position, nearBodies)
-			}
-			else{
-				target = null
+				if((object.getType.equals(Semantic.Visitor)) || (object.getType.equals(Semantic.BodyGuard)) && (body.getPosition.distance(body.getBox.getClosestPointTo(object.getPosition)) < radius.radius)){
+					if (target == null){
+						target = object
+					}
+					else if (body.getPosition.distance(target.position) > body.getPosition.distance(object.position)){
+						target = object
+					}
+				}
 			}
 			if (target!=null){
 				this.seekBehaviour = new KinematicSeekBehaviour
@@ -71,9 +52,12 @@ agent Terrorist extends AbstractAnimat {
 					body.position,
 					body.currentLinearMotion.length,
 					body.maxLinearSpeed,
-					target
+					target.position
 					)
 				o.emitInfluence(occurrence.time)
+				if(body.getPosition.distance(target.position) < ConstantContainer.ZOMBIE_RANGE){
+					influenceAttack(occurrence.time,target.getBodyID)
+				}
 			}else{
 				this.wanderBehaviour = new KinematicWanderBehaviour
 				var o = this.wanderBehaviour.runWander(
@@ -98,7 +82,7 @@ agent Terrorist extends AbstractAnimat {
 				)
 			o.emitInfluence(occurrence.time)
 		}
-		doNothing
+		//doNothing
 	}
 
 }
