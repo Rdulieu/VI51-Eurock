@@ -65,3 +65,5 @@ event RunEndOfStep
 event RunBeginingOfStep
 
 event EndOfGame
+
+event AlertEvent

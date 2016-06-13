@@ -49,7 +49,7 @@ class KinematicFleeBehaviour implements FleeBehaviour {
 		val v = new Vector2f()
 		v.sub(position,target)
 		v.normalize()
-		v.scale(linearSpeed)
+		v.scale(maxLinearSpeed)
 		// orientation ?
 		
 		return new BehaviourOutput() => [

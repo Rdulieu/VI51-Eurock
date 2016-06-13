@@ -30,6 +30,7 @@ agent BodyGuard extends AbstractAnimat {
 		if(occurrence.objects.size()>0){
 			for (object : occurrence.objects){
 				if (object.getType.equals(Semantic.Zombie)){
+					emit(new AlertEvent)
 					targetID = object.getBodyId()
 				}
 			}

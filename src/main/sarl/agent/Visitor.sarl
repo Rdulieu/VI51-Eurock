@@ -1,5 +1,7 @@
 package ^agent
 
+import Behaviour.FleeBehaviour
+import Behaviour.KinematicFleeBehaviour
 import Behaviour.KinematicSeekBehaviour
 import Behaviour.KinematicWanderBehaviour
 import Behaviour.SeekBehaviour
@@ -24,12 +26,18 @@ agent Visitor extends AbstractAnimat {
 	
 	var seekBehaviour : SeekBehaviour
 	var wanderBehaviour : WanderBehaviour
+	var fleeBehaviour : FleeBehaviour
+	var alertMode : boolean = false
 	var recommandation : String /* = "Scene1"*/
 	  
 	on Initialize{
 		super._handle_Initialize_0(occurrence)
 		var desires = new VisitorDesire(ConstantContainer.BASIC_MUSIC_DESIRE,ConstantContainer.BASIC_THIRSTY,ConstantContainer.BASIC_HUNGRY,ConstantContainer.BASIC_PEE)
 		setSkill(DesireManager,desires)
+	}
+	
+	on AlertEvent{
+		alertMode = true
 	}
 		
 	on Perception{
@@ -39,59 +47,74 @@ agent Visitor extends AbstractAnimat {
 		
 		var body = occurrence.body
 		var target : Point2f = null
+		var targetToFlee : Perceivable = null
 		var targetType : Semantic = null
 		var nearBodies = new ArrayList<Perceivable>
 		var radius = new Circle2f(body.position,ConstantContainer.PRIVATE_RADIUS)
-		
-		if(occurrence.objects.size()>0){
-			for (object : occurrence.objects){
-				
-				if((object.getType.equals(Semantic.Visitor) || object.getType.equals(Semantic.BodyGuard)) && radius.intersects(object.getBox))nearBodies.add(object)
-				
-				else if (bestAction.equals(Actions.ListenMusic) &&  object.getType.equals(Semantic.Scene)){
-					target = object.getBox.getClosestPointTo(body.position) as Point2f
-					targetType = Semantic.Scene					
+		if(alertMode == false){
+			if(occurrence.objects.size()>0){
+				for (object : occurrence.objects){
+					
+					if((object.getType.equals(Semantic.Visitor) || object.getType.equals(Semantic.BodyGuard)) && radius.intersects(object.getBox))nearBodies.add(object)
+					
+					else if (bestAction.equals(Actions.ListenMusic) &&  object.getType.equals(Semantic.Scene)){
+						target = object.getBox.getClosestPointTo(body.position) as Point2f
+						targetType = Semantic.Scene					
+					}
+					else if (bestAction.equals(Actions.Pee) && object.getType.equals(Semantic.Toilet)){
+						target = object.getBox.getClosestPointTo(body.position) as Point2f
+						targetType=Semantic.Toilet
+					}
+					else if (bestAction.equals(Actions.Drink) && object.getType.equals(Semantic.DrinkStand)){
+						target = object.getBox.getClosestPointTo(body.position) as Point2f
+						targetType=Semantic.DrinkStand
+					}
+					else if (bestAction.equals(Actions.Eat) && object.getType.equals(Semantic.EatStand)){
+						target = object.getBox.getClosestPointTo(body.position) as Point2f
+						targetType=Semantic.EatStand
+					}
+	//				else if (object.getType.equals(Semantic.Gate)){
+	//					target = object.getPosition()
+	//					targetType=Semantic.Gate
+	//				}
+	//									// Groupe favori
+	//					if (object.getName.equals(this.recommandation)){
+	//						target = object.getBox.getClosestPointTo(body.position) as Point2f
+	//						bestAction = Actions.ListenMusic
+	//						targetType = Semantic.Scene
+	//					}
 				}
-				else if (bestAction.equals(Actions.Pee) && object.getType.equals(Semantic.Toilet)){
-					target = object.getBox.getClosestPointTo(body.position) as Point2f
-					targetType=Semantic.Toilet
-				}
-				else if (bestAction.equals(Actions.Drink) && object.getType.equals(Semantic.DrinkStand)){
-					target = object.getBox.getClosestPointTo(body.position) as Point2f
-					targetType=Semantic.DrinkStand
-				}
-				else if (bestAction.equals(Actions.Eat) && object.getType.equals(Semantic.EatStand)){
-					target = object.getBox.getClosestPointTo(body.position) as Point2f
-					targetType=Semantic.EatStand
-				}
-//				else if (object.getType.equals(Semantic.Gate)){
-//					target = object.getPosition()
-//					targetType=Semantic.Gate
-//				}
-//									// Groupe favori
-//					if (object.getName.equals(this.recommandation)){
-//						target = object.getBox.getClosestPointTo(body.position) as Point2f
-//						bestAction = Actions.ListenMusic
-//						targetType = Semantic.Scene
-//					}
-			}
-			if(target!=null){
-				this.seekBehaviour = new KinematicSeekBehaviour
-				if((targetType.equals(Semantic.Scene) && target.distance(body.position)<10) ||
-					((targetType.equals(Semantic.DrinkStand) || targetType.equals(Semantic.EatStand) || targetType.equals(Semantic.Toilet))&& target.distance(body.position)<5))
-				{
-					applyVariation(bestAction)
+				if(target!=null){
+					this.seekBehaviour = new KinematicSeekBehaviour
+					if((targetType.equals(Semantic.Scene) && target.distance(body.position)<10) ||
+						((targetType.equals(Semantic.DrinkStand) || targetType.equals(Semantic.EatStand) || targetType.equals(Semantic.Toilet))&& target.distance(body.position)<5))
+					{
+						applyVariation(bestAction)
+					}else{
+						applyVariation(Actions.Move)
+					}
+					var o = this.seekBehaviour.runSeek(
+						body.position,
+						body.currentLinearMotion.length,
+						body.maxLinearSpeed,
+						target
+					)
+					//o.setLinear(PrivateZone(body.position,nearBodies,body.currentLinearMotion,targetType))
+					o.emitInfluence(occurrence.time)
 				}else{
 					applyVariation(Actions.Move)
-				}
-				var o = this.seekBehaviour.runSeek(
+					this.wanderBehaviour = new KinematicWanderBehaviour
+					//position : Point2f, orientation : Vector2f, linearSpeed : float, maxLinear : float, angularSpeed : float, maxAngular : float
+					var o = this.wanderBehaviour.runWander(
 					body.position,
+					body.currentLinearMotion,
 					body.currentLinearMotion.length,
 					body.maxLinearSpeed,
-					target
-				)
-				//o.setLinear(PrivateZone(body.position,nearBodies,body.currentLinearMotion,targetType))
-				o.emitInfluence(occurrence.time)
+					body.currentAngularSpeed,
+					body.maxAngularSpeed
+					)
+					o.emitInfluence(occurrence.time)
+				}
 			}else{
 				applyVariation(Actions.Move)
 				this.wanderBehaviour = new KinematicWanderBehaviour
@@ -107,20 +130,51 @@ agent Visitor extends AbstractAnimat {
 				o.emitInfluence(occurrence.time)
 			}
 		}else{
-			applyVariation(Actions.Move)
-			this.wanderBehaviour = new KinematicWanderBehaviour
-			//position : Point2f, orientation : Vector2f, linearSpeed : float, maxLinear : float, angularSpeed : float, maxAngular : float
-			var o = this.wanderBehaviour.runWander(
-			body.position,
-			body.currentLinearMotion,
-			body.currentLinearMotion.length,
-			body.maxLinearSpeed,
-			body.currentAngularSpeed,
-			body.maxAngularSpeed
-			)
-			o.emitInfluence(occurrence.time)
+			if(occurrence.objects.size()>0){
+				for (object : occurrence.objects){
+					if(object.getType.equals(Semantic.Zombie)){
+						if (targetToFlee == null){
+							targetToFlee = object
+						}
+						else if (body.getPosition.distance(targetToFlee.position) > body.getPosition.distance(object.position)){
+							targetToFlee = object
+						}
+					}
+				}
+				if (target!=null){
+					this.fleeBehaviour = new KinematicFleeBehaviour
+					var o = this.fleeBehaviour.runFlee(
+						body.position,
+						body.currentLinearMotion.length,
+						body.maxLinearSpeed,
+						targetToFlee.position
+						)
+					o.emitInfluence(occurrence.time)
+				}
+				else{
+					this.wanderBehaviour = new KinematicWanderBehaviour
+					var o = this.wanderBehaviour.runWander(
+						body.position,
+						body.currentLinearMotion,
+						body.currentLinearMotion.length,
+						body.maxLinearSpeed,
+						body.currentAngularSpeed,
+						body.maxAngularSpeed
+						)
+					o.emitInfluence(occurrence.time)
+					}
+			}else{
+				this.wanderBehaviour = new KinematicWanderBehaviour
+				var o = this.wanderBehaviour.runWander(
+					body.position,
+					body.currentLinearMotion,
+					body.currentLinearMotion.length,
+					body.maxLinearSpeed,
+					body.currentAngularSpeed,
+					body.maxAngularSpeed
+					)
+				o.emitInfluence(occurrence.time)
+			}
 		}
-		
 	}
-
 }
